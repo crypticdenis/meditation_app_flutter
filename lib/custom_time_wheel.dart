@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meditation_app/gradient_colors.dart';
+import 'package:meditation_app_flutter/gradient_colors.dart';
 import 'gongs.dart';
 
 enum WheelMode { numbers, colors, gongs }

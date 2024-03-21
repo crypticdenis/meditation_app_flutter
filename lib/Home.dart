@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meditation_app/Sleep.dart';
-import 'package:meditation_app/breathing.dart';
+import 'package:meditation_app_flutter/Sleep.dart';
+import 'package:meditation_app_flutter/breathing.dart';
 import 'home_screen_buttons.dart';
 import 'meditation.dart';
 import 'theme_provider.dart';
