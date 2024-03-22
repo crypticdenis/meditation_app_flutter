@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'settings.dart';
 import 'gong_settings.dart';
 import 'providers/streak_provider.dart'; // Import the streak provider
+import 'providers/sound_provider.dart';
+import 'sound_settings.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key});
@@ -22,14 +24,25 @@ class _HomeState extends State<Home> {
     const HomeScreenButton(title: 'Breathing', icon: Icons.wb_sunny),
     const HomeScreenButton(title: 'Learn', icon: Icons.school),
     const HomeScreenButton(title: 'Sleep', icon: Icons.nightlight_round),
-    const HomeScreenButton(title: 'Settings', icon: Icons.settings),
-    const HomeScreenButton(title: 'Music', icon: Icons.music_note),
+    const HomeScreenButton(title: 'Backgrounds', icon: Icons.palette),
+    const HomeScreenButton(title: 'Gongs', icon: Icons.rice_bowl),
+    const HomeScreenButton(title: 'Soundscape', icon: Icons.headphones),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<BackgroundSoundProvider>(context, listen: false)
+          .initializeAndPlayLoop();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final streakProvider = Provider.of<StreakProvider>(context); // Access the streak provider
+    final streakProvider =
+        Provider.of<StreakProvider>(context); // Access the streak provider
     final currentStreak = streakProvider.streak; // Get the current streak
 
     return Scaffold(
@@ -69,7 +82,8 @@ class _HomeState extends State<Home> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(12.0),
-                      child: Text("Current Streak: $currentStreak", // Display the current streak
+                      child: Text("Current Streak: $currentStreak",
+                          // Display the current streak
                           style: TextStyle(color: Colors.white, fontSize: 24)),
                     ),
                   ],
@@ -81,13 +95,13 @@ class _HomeState extends State<Home> {
                   childAspectRatio: 3 / 2,
                   children: menuItems
                       .map((button) => Card(
-                    color: Colors.black.withOpacity(0.2),
-                    margin: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                        onTap: () => _handleButtonTap(button.title),
-                        // Example navigation
-                        child: button),
-                  ))
+                            color: Colors.black.withOpacity(0.2),
+                            margin: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                                onTap: () => _handleButtonTap(button.title),
+                                // Example navigation
+                                child: button),
+                          ))
                       .toList(),
                 ),
               ),
@@ -105,18 +119,18 @@ class _HomeState extends State<Home> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-            const MeditationScreen(), // Navigate to Meditation Screen
+                const MeditationScreen(), // Navigate to Meditation Screen
           ),
         );
         break;
-    // Add other cases for different buttons here
+      // Add other cases for different buttons here
 
-      case 'Settings':
+      case 'Backgrounds':
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) =>
-            const SettingsScreen(), // Navigate to Settings Screen
+                const SettingsScreen(), // Navigate to Settings Screen
           ),
         );
         break;
@@ -125,7 +139,7 @@ class _HomeState extends State<Home> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-            const BreathingScreen(), // Navigate to Settings Screen
+                const BreathingScreen(), // Navigate to Settings Screen
           ),
         );
         break;
@@ -135,23 +149,38 @@ class _HomeState extends State<Home> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-            const SleepScreen(), // Navigate to Settings Screen
+                const SleepScreen(), // Navigate to Settings Screen
           ),
         );
         break;
-      case 'Music':
+      case 'Gongs':
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) =>
-            const GongSelectionScreen(), // Navigate to Settings Screen
+                const GongSelectionScreen(), // Navigate to Settings Screen
+          ),
+        );
+        break;
+      case 'Soundscape':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                const SoundSelectionScreen(), // Navigate to Settings Screen
           ),
         );
         break;
       default:
-      // Handle if the title doesn't match a known screen
+        // Handle if the title doesn't match a known screen
         break;
     }
   }
-}
 
+  @override
+  void dispose() {
+    // Replace 'stopBackgroundSound' with your method to stop the sound.
+    Provider.of<BackgroundSoundProvider>(context, listen: false).stop();
+    super.dispose();
+  }
+}

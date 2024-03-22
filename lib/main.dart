@@ -7,6 +7,7 @@ import  'providers/timer_provider.dart';
 import  'providers/gong_provider.dart';
 import 'providers/meditation_time_provider.dart';
 import  'providers/streak_provider.dart';
+import 'providers/sound_provider.dart';
 
 
 Future<void> main() async {
@@ -25,6 +26,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => BackgroundSoundProvider()),
         ChangeNotifierProvider(create: (context) => ScrollWheelIndexProvider()),
         ChangeNotifierProvider(create: (context) => StreakProvider()),
         ChangeNotifierProvider(create: (context) => GongProvider()),

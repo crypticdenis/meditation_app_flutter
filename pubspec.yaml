@@ -74,6 +74,7 @@ flutter:
     - assets/icons/pause.png
     - assets/icons/cross.png
     - assets/gongs/
+    - assets/sounds/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

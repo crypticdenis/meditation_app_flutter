@@ -29,12 +29,14 @@ class TimerWidget extends StatefulWidget {
 
 class _TimerWidgetState extends State<TimerWidget> {
   late int _remainingSeconds;
+  late int _totalSeconds; // Added to store the total seconds
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _remainingSeconds = widget.minute * 60 + widget.second;
+    _totalSeconds = widget.minute * 60 + widget.second; // Initialize total seconds
+    _remainingSeconds = _totalSeconds; // Initialize remaining seconds
     _handleOperation(widget.operation);
   }
 
@@ -160,39 +162,63 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     final minutes = twoDigits(_remainingSeconds ~/ 60);
     final seconds = twoDigits(_remainingSeconds % 60);
-    return Container(
-      padding: const EdgeInsets.only(top: 300),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '$minutes',
-            style: const TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+    // Calculate the progress for the circular progress bar
+    double progress = (_totalSeconds - _remainingSeconds) / _totalSeconds;
+
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.only(top: 150),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // Circular progress bar that sits behind the timer text
+              SizedBox(
+                width: 120, // Diameter of the circular progress bar
+                height: 120, // Diameter of the circular progress bar
+                child: CircularProgressIndicator(
+                  value: progress, // Current progress
+                  backgroundColor: Colors.transparent, // Background color of the progress bar
+                  color: Colors.white, // Color of the progress
+                  strokeWidth: 8, // Thickness of the progress bar
+                ),
+              ),
+              // Timer text that shows the remaining time
+              Row(
+                mainAxisSize: MainAxisSize.min, // Align texts closer to each other
+                children: [
+                  Text(
+                    '$minutes',
+                    style: const TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(width: 10), // Space between minutes and seconds
+                  const Text(
+                    ':',
+                    style: TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(width: 10), // Space between minutes and seconds
+                  Text(
+                    '$seconds',
+                    style: const TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          const SizedBox(width: 10), // Adjusted padding
-          const Text(
-            ':',
-            style: TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(width: 10), // Adjusted padding
-          Text(
-            '$seconds',
-            style: const TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

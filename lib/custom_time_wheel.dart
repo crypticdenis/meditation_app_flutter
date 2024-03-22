@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:meditation_app_flutter/gradient_colors.dart';
 import 'gongs.dart';
+import 'sounds.dart';
 
-enum WheelMode { numbers, colors, gongs }
+enum WheelMode { numbers, colors, gongs, sounds }
 
 class CustomTimeWheel extends StatefulWidget {
   final int itemCount;
@@ -21,8 +22,8 @@ class CustomTimeWheel extends StatefulWidget {
     required this.itemCount,
     required this.onSelectedItemChanged,
     required this.selectedValue,
-    this.itemExtent = 35,
-    this.diameterRatio = 1,
+    this.itemExtent = 55,
+    this.diameterRatio = 1.5,
     this.perspective = 0.009,
     this.scrollController,
     this.autoScrollToItem,
@@ -81,7 +82,7 @@ class _CustomTimeWheelState extends State<CustomTimeWheel> {
                 content = Text(
                   index.toString().padLeft(2, '0'),
                   style: TextStyle(
-                    fontSize: isSelected ? 32 : 30,
+                    fontSize: isSelected ? 42 : 40,
                     color: isSelected ? Colors.white : Colors.white.withOpacity(opacity),
                     fontWeight: FontWeight.bold,
                   ),
@@ -102,6 +103,17 @@ class _CustomTimeWheelState extends State<CustomTimeWheel> {
               // Assuming GradientTheme.names[index] gives the name of the color
                 content = Text(
                   GongSounds.names[index],
+                  style: TextStyle(
+                    fontSize: isSelected ? 24 : 20,
+                    color: isSelected ? Colors.white : Colors.white.withOpacity(opacity),
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+                break;
+              case WheelMode.sounds:
+              // Assuming GradientTheme.names[index] gives the name of the color
+                content = Text(
+                  BackgroundsSounds.names[index],
                   style: TextStyle(
                     fontSize: isSelected ? 24 : 20,
                     color: isSelected ? Colors.white : Colors.white.withOpacity(opacity),
