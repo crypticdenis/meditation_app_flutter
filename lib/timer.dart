@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'common_definitions.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'gongs.dart';
-import 'gong_provider.dart';
+import 'providers/gong_provider.dart';
 import 'package:provider/provider.dart';
+import 'providers/streak_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'rate_meditation.dart';
 
 class TimerWidget extends StatefulWidget {
   final int minute;
@@ -82,6 +85,7 @@ class _TimerWidgetState extends State<TimerWidget> {
         });
       } else {
         _timer?.cancel();
+        _handleTimerComplete(); // Call _handleTimerComplete() when the timer completes
         _playGongSound(); // Play gong sound when timer is up
         if (widget.onTimerComplete != null) {
           widget.onTimerComplete!();
@@ -99,6 +103,43 @@ class _TimerWidgetState extends State<TimerWidget> {
     final player = AudioPlayer(); // Create a new instance of the player
     await player
         .play(AssetSource(gongSoundPath)); // Play the selected gong sound
+  }
+
+  Future<DateTime> getLastIncrementDateFromStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int lastIncrementTimestamp = prefs.getInt('lastIncrementTimestamp') ?? 0;
+    return DateTime.fromMillisecondsSinceEpoch(lastIncrementTimestamp);
+  }
+
+
+  void _handleTimerComplete() async {
+    final streakProvider = Provider.of<StreakProvider>(context, listen: false);
+    final lastReset = await getLastIncrementDateFromStorage();
+    final lastResetDay =
+        DateTime(lastReset.year, lastReset.month, lastReset.day);
+    final today = DateTime.now();
+    final todayDay = DateTime(today.year, today.month, today.day);
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return RateMeditationDialog();
+        });
+
+    if (lastResetDay.isBefore(todayDay)) {
+      streakProvider.incrementStreak();
+      print(lastResetDay);
+      print("streak +1");
+      _resetTimer();
+    } else {
+      _timer?.cancel();
+    }
+
+    if (widget.onTimerComplete != null) {
+      widget.onTimerComplete!();
+      print("same same");
+      print(lastResetDay);
+    }
   }
 
   void _pauseTimer() {

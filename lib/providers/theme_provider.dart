@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'gradient_colors.dart';// Adjust the import path as necessary
+import '../gradient_colors.dart';// Adjust the import path as necessary
 
 class ThemeProvider with ChangeNotifier {
   int _currentThemeIndex = 0; // Default to first theme

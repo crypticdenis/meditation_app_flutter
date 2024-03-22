@@ -13,7 +13,6 @@ class HomeScreenButton extends StatelessWidget {
       width: 150, // Adjust button width as needed
       height: 75, // Adjust button height as needed
       decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.1), // Set button color
           borderRadius: BorderRadius.circular(25) // Add rounded corners if desired
       ),
       child: Row( // Use Row for horizontal layout

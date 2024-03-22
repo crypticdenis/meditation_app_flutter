@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:meditation_app/gradient_colors.dart';
+import 'package:meditation_app_flutter/gradient_colors.dart';
 import 'package:provider/provider.dart';
-import 'theme_provider.dart';
+import 'providers/theme_provider.dart';
 import 'custom_time_wheel.dart';
 import 'app_bar.dart';
 
