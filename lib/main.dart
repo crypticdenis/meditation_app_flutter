@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'home.dart'; // Ensure this file exists and is correctly named in your project.
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'theme_provider.dart';
-import  'timer_provider.dart';
-import  'gong_provider.dart';
-import 'meditation_time_provider.dart';
+import 'providers/theme_provider.dart';
+import  'providers/timer_provider.dart';
+import  'providers/gong_provider.dart';
+import 'providers/meditation_time_provider.dart';
+import  'providers/streak_provider.dart';
 
 
 Future<void> main() async {
@@ -25,6 +26,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ScrollWheelIndexProvider()),
+        ChangeNotifierProvider(create: (context) => StreakProvider()),
         ChangeNotifierProvider(create: (context) => GongProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => MeditationTimeProvider()),

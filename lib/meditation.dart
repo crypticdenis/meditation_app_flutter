@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'theme_provider.dart';
+import 'providers/theme_provider.dart';
 import 'app_bar.dart';
 import 'time_picker.dart';
 import 'timer.dart'; // Make sure this is the updated TimerWidget
 import 'common_definitions.dart'; // Import common definitions
-import 'package:audioplayers/audioplayers.dart';
-import 'meditation_time_provider.dart';
+import 'providers/meditation_time_provider.dart';
 
 class MeditationScreen extends StatefulWidget {
   const MeditationScreen({super.key});

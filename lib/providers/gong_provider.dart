@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'gongs.dart';
+import '../gongs.dart';
 
 class GongProvider with ChangeNotifier {
   int _currentGongIndex = 0;
