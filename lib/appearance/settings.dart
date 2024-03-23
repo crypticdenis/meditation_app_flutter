@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:meditation_app_flutter/gradient_colors.dart';
+import 'package:meditation_app_flutter/appearance/gradient_colors.dart';
 import 'package:provider/provider.dart';
-import 'providers/theme_provider.dart';
-import 'custom_time_wheel.dart';
-import 'app_bar.dart';
-
+import 'package:meditation_app_flutter/providers/theme_provider.dart';
+import 'package:meditation_app_flutter/custom_time_wheel.dart';
+import 'package:meditation_app_flutter/custom_app_bar.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -21,16 +20,13 @@ class SettingsScreen extends StatelessWidget {
           gradient: themeProvider.currentGradient,
         ),
         child: Center(
-          // Center the CustomTimeWheel for better UI
           child: CustomTimeWheel(
             itemCount: GradientColors.gradients.length,
-            // Corrected to use GradientTheme
             itemExtent: 80,
-            // Adjust based on your UI needs
             selectedValue: themeProvider.currentThemeIndex,
             onSelectedItemChanged: (index) => themeProvider.setTheme(index),
             mode: WheelMode.colors,
-            colorNames: GradientColors.names, // Provide the list of color names
+            colorNames: GradientColors.names,
           ),
         ),
       ),

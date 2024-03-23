@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'providers/theme_provider.dart';
+import '../providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'app_bar.dart';
-import 'time_picker.dart'; // Import your Timer widget
+import '../custom_app_bar.dart';
+import '../timer_feature/time_picker.dart';
 
-
-
-class BreathingScreen extends StatefulWidget {
-  const BreathingScreen({super.key});
+class SleepScreen extends StatefulWidget {
+  const SleepScreen({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _BreathingScreenState createState() => _BreathingScreenState();
+  _SleepScreenState createState() => _SleepScreenState();
 }
 
-class _BreathingScreenState extends State<BreathingScreen> {
-  int _selectedMinute = 10; // Default to 10 minutes as per your initState
+class _SleepScreenState extends State<SleepScreen> {
+  int _selectedMinute = 10;
 
   @override
   void initState() {
@@ -44,12 +42,11 @@ class _BreathingScreenState extends State<BreathingScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               TimePicker(
-                initialMinute: 10, // Preset or dynamically set
-                onTimeSelected: _handleTimeSelected, // Implement in Timer
+                initialMinute: 10,
+                onTimeSelected: _handleTimeSelected,
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Display the selected time
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(

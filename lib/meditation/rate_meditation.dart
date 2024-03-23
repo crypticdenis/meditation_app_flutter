@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'providers/theme_provider.dart';
+import '../providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class RateMeditationDialog extends StatelessWidget {
+  const RateMeditationDialog({super.key});
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -16,11 +18,11 @@ class RateMeditationDialog extends StatelessWidget {
         shaderCallback: (bounds) => gradient.createShader(
           Rect.fromLTWH(0, 0, bounds.width, bounds.height),
         ),
-        child: Text(
+        child: const Text(
           'Rate Your Meditation',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.white, // This color will be overwritten by the shader
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -29,35 +31,31 @@ class RateMeditationDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            const Text(
               'How was your Experience today, Denis?',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16, // Slightly larger text for readability
+                fontSize: 16,
               ),
             ),
-            SizedBox(height: 24), // More space for aesthetic reasons
+            const SizedBox(height: 24),
             Wrap(
               alignment: WrapAlignment.spaceEvenly,
-              // Even spacing for aesthetics
               children: List.generate(5, (index) {
                 int i = index + 1;
                 return Padding(
                   padding: const EdgeInsets.all(4.0),
-                  // Spacing around each button
                   child: InkWell(
                     onTap: () {
                       print('Selected rating: $i');
-                      Navigator.pop(
-                          context, i); // Close dialog and pass selected rating
+                      Navigator.pop(context, i);
                     },
                     borderRadius: BorderRadius.circular(5),
-                    // Match container border radius
                     child: DecoratedBox(
                       decoration: BoxDecoration(
-                        gradient: gradient, // Apply the gradient here
+                        gradient: gradient,
                         borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
+                        boxShadow: const[
                           BoxShadow(
                             color: Colors.black26,
                             blurRadius: 4, // Shadow for a 3D effect
@@ -71,7 +69,7 @@ class RateMeditationDialog extends StatelessWidget {
                         child: Center(
                           child: Text(
                             '$i',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'providers/theme_provider.dart';
-import 'app_bar.dart';
+import 'package:meditation_app_flutter/providers/theme_provider.dart';
+import 'package:meditation_app_flutter/custom_app_bar.dart';
 import 'dart:async';
-import 'time_picker.dart';
-import 'timer.dart'; // Make sure this is the updated TimerWidget
-import 'common_definitions.dart'; // Import common definitions
-import 'providers/meditation_time_provider.dart';
-import 'breathing_animation_widget.dart';
+import 'package:meditation_app_flutter/timer_feature/time_picker.dart';
+import 'package:meditation_app_flutter/timer_feature/timer.dart';
+import 'package:meditation_app_flutter/common_definitions.dart';
+import 'package:meditation_app_flutter/providers/meditation_time_provider.dart';
+import 'package:meditation_app_flutter/breathing_screen_files/breathing_animation_widget.dart';
 
 class MeditationScreen extends StatefulWidget {
   const MeditationScreen({super.key});
@@ -18,10 +18,10 @@ class MeditationScreen extends StatefulWidget {
 
 class _MeditationScreenState extends State<MeditationScreen> {
   TimerOperation _timerOperation = TimerOperation.reset;
-  double _opacity = 1.0;
+  final double _opacity = 1.0;
   String _breathingInstruction = '';
-  int _countdown = 3; // For countdown from 3 to 1
-  double _textOpacity = 1.0; // For controlling text opacity
+  int _countdown = 3;
+  double _textOpacity = 1.0;
 
   void _handleTimeSelected(int minute) {
     final provider =
@@ -36,21 +36,19 @@ class _MeditationScreenState extends State<MeditationScreen> {
       setState(() {
         _timerOperation = TimerOperation.start;
         _breathingInstruction = '';
-        _countdown = 3; // Reset countdown
-        _textOpacity = 1.0; // Ensure text is fully visible initially
+        _countdown = 3;
+        _textOpacity = 1.0;
       });
 
-      Timer.periodic(Duration(seconds: 1), (timer) {
+      Timer.periodic(const Duration(seconds: 1), (timer) {
         if (_countdown > 0) {
           setState(() {
             _breathingInstruction = '$_countdown';
-            _textOpacity = 1.0; // Make number visible
+            _textOpacity = 1.0;
           });
-          // Start fading out the number after a short delay
-          Future.delayed(Duration(milliseconds: 500), () {
-            // Adjust this delay as needed
+          Future.delayed(const Duration(milliseconds: 500), () {
             setState(() {
-              _textOpacity = 0.0; // Fade out the number
+              _textOpacity = 0.0;
             });
           });
 
@@ -58,43 +56,36 @@ class _MeditationScreenState extends State<MeditationScreen> {
             _countdown--;
           });
         } else {
-          timer.cancel(); // Stop the countdown
-          // After last countdown number has faded, proceed with "Breathe In"
-          Future.delayed(Duration(milliseconds: 300), () {
-            // Adjust this to allow last number to fade
+          timer.cancel();
+          Future.delayed(const Duration(milliseconds: 300), () {
             setState(() {
               _breathingInstruction = 'Breathe In';
-              _textOpacity = 1.0; // Ensure "Breathe In" is fully visible
+              _textOpacity = 1.0;
             });
 
-            // After "Breathe In" is displayed for 4 seconds, start fading it out
-            Future.delayed(Duration(seconds: 4), () {
+            Future.delayed(const Duration(seconds: 4), () {
               setState(() {
-                _textOpacity = 0.0; // Start fading out "Breathe In"
+                _textOpacity = 0.0;
               });
 
-              // After fading out "Breathe In", display and fade out "Breathe Out"
-              Future.delayed(Duration(seconds: 1), () {
+              Future.delayed(const Duration(seconds: 1), () {
                 setState(() {
                   _breathingInstruction = 'Breathe Out';
-                  _textOpacity = 1.0; // Ensure "Breathe Out" is fully visible
+                  _textOpacity = 1.0;
                 });
-                Future.delayed(Duration(seconds: 4), () {
+                Future.delayed(const Duration(seconds: 4), () {
                   setState(() {
-                    _textOpacity = 0.0; // Start fading out "Breathe Out"
+                    _textOpacity = 0.0;
                   });
 
-                  // After fading out "Breathe Out", display and fade out "Follow the flow"
-                  Future.delayed(Duration(seconds: 1), () {
+                  Future.delayed(const Duration(seconds: 1), () {
                     setState(() {
                       _breathingInstruction = 'Follow the Flow';
-                      _textOpacity =
-                          1.0; // Ensure "Follow the flow" is fully visible
+                      _textOpacity = 1.0;
                     });
-                    Future.delayed(Duration(seconds: 4), () {
+                    Future.delayed(const Duration(seconds: 4), () {
                       setState(() {
-                        _textOpacity =
-                            0.0; // Start fading out "Follow the flow"
+                        _textOpacity = 0.0;
                       });
                     });
                   });
@@ -110,7 +101,7 @@ class _MeditationScreenState extends State<MeditationScreen> {
   void _cancelTimer() {
     setState(() {
       _timerOperation = TimerOperation.reset;
-      _breathingInstruction = ''; // Clear breathing instruction on cancel
+      _breathingInstruction = '';
     });
   }
 
@@ -135,7 +126,7 @@ class _MeditationScreenState extends State<MeditationScreen> {
               child: Column(
                 children: [
                   if (_timerOperation != TimerOperation.reset)
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                   _timerOperation == TimerOperation.reset
                       ? TimePicker(
                           initialMinute: meditationTimeProvider.selectedMinute,
@@ -160,23 +151,22 @@ class _MeditationScreenState extends State<MeditationScreen> {
               ),
             ),
             if (_timerOperation != TimerOperation.reset)
-              Container(
+              SizedBox(
                 height: 300,
                 child: SinusoidalWaveWidget(),
               ),
             AnimatedOpacity(
               opacity: _textOpacity,
-              duration: Duration(seconds: 1),
-              // Adjust this duration to control the fade speed
+              duration: const Duration(seconds: 1),
               child: Text(
                 _breathingInstruction,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 34,
                   color: Colors.white,
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             InkWell(
               onTap: _toggleTimerOperation,
               child: Image.asset(
@@ -188,7 +178,7 @@ class _MeditationScreenState extends State<MeditationScreen> {
                 height: 50,
               ),
             ),
-            SizedBox(height: 70),
+            const SizedBox(height: 70),
           ],
         ),
       ),
@@ -198,7 +188,7 @@ class _MeditationScreenState extends State<MeditationScreen> {
   void _resetTimer() {
     setState(() {
       _timerOperation = TimerOperation.reset;
-      _breathingInstruction = ''; // Clear breathing instruction on reset
+      _breathingInstruction = '';
       print('Timer completed!');
     });
   }

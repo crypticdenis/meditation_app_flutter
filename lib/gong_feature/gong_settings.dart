@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'providers/gong_provider.dart';
-import 'custom_time_wheel.dart';
+import '../providers/gong_provider.dart';
+import '../custom_time_wheel.dart';
 import 'gongs.dart';
-import 'app_bar.dart';
-import 'providers/theme_provider.dart';
+import '../custom_app_bar.dart';
+import '../providers/theme_provider.dart';
 
 class GongSelectionScreen extends StatelessWidget {
   const GongSelectionScreen({super.key});

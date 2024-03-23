@@ -1,14 +1,17 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'providers/theme_provider.dart'; // Make sure this import path is correct
+import '../providers/theme_provider.dart';
 
 class SinusoidalWaveWidget extends StatefulWidget {
+  const SinusoidalWaveWidget({super.key});
+
   @override
   _SinusoidalWaveWidgetState createState() => _SinusoidalWaveWidgetState();
 }
 
-class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget> with SingleTickerProviderStateMixin {
+class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -20,10 +23,11 @@ class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget> with Single
       vsync: this,
     )..repeat(reverse: false);
 
-    _animation = Tween<double>(begin: 0.0, end: 2 * math.pi).animate(_controller)
-      ..addListener(() {
-        setState(() {});
-      });
+    _animation =
+        Tween<double>(begin: 0.0, end: 2 * math.pi).animate(_controller)
+          ..addListener(() {
+            setState(() {});
+          });
   }
 
   @override
@@ -34,11 +38,11 @@ class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget> with Single
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context); // Ensure ThemeProvider is correctly implemented
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return CustomPaint(
       painter: SinusoidalPainter(
         phase: _animation.value,
-        dotGradient: themeProvider.currentGradient, // Pass the gradient from your ThemeProvider
+        dotGradient: themeProvider.currentGradient,
       ),
       child: Container(height: 5),
     );
@@ -59,9 +63,9 @@ class SinusoidalPainter extends CustomPainter {
     this.phase = 0.0,
     required this.dotGradient,
   }) : wavePaint = Paint()
-    ..color = Colors.white
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 20.0 {
+          ..color = Colors.white
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 20.0 {
     dotPaint = Paint()..style = PaintingStyle.fill;
   }
 
@@ -69,12 +73,16 @@ class SinusoidalPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Path path = Path();
     double dotX = size.width / 2;
-    double dotY = size.height / 2 + amplitude * math.sin((2 * math.pi * frequency * dotX / size.width) + phase);
+    double dotY = size.height / 2 +
+        amplitude *
+            math.sin((2 * math.pi * frequency * dotX / size.width) + phase);
     Rect dotRect = Rect.fromCircle(center: Offset(dotX, dotY), radius: 10.0);
     dotPaint.shader = dotGradient.createShader(dotRect);
 
     for (double x = 0.0; x < size.width; x += 1) {
-      double y = size.height / 2 + amplitude * math.sin((2 * math.pi * frequency * x / size.width) + phase);
+      double y = size.height / 2 +
+          amplitude *
+              math.sin((2 * math.pi * frequency * x / size.width) + phase);
       if (x == 0) {
         path.moveTo(x, y);
       } else {

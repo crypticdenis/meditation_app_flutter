@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'providers/sound_provider.dart';
-import 'custom_time_wheel.dart';
+import '../providers/sound_provider.dart';
+import '../custom_time_wheel.dart';
 import 'sounds.dart';
-import 'app_bar.dart';
-import 'providers/theme_provider.dart';
+import '../custom_app_bar.dart';
+import '../providers/theme_provider.dart';
 
 class SoundSelectionScreen extends StatelessWidget {
   const SoundSelectionScreen({super.key});
@@ -27,8 +27,7 @@ class SoundSelectionScreen extends StatelessWidget {
             selectedValue: soundProvider.currentSoundIndex,
             onSelectedItemChanged: (index) => soundProvider.setSound(index),
             mode: WheelMode.sounds,
-            // Assuming WheelMode has a text option.
-            colorNames: BackgroundsSounds.names, // Provide the list of gong names.
+            colorNames: BackgroundsSounds.names,
           ),
         ),
       ),

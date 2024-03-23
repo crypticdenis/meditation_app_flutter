@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:meditation_app_flutter/gradient_colors.dart';
-import 'gongs.dart';
-import 'sounds.dart';
+import 'package:meditation_app_flutter/appearance/gradient_colors.dart';
+import 'gong_feature/gongs.dart';
+import 'background_sounds_feature/sounds.dart';
 
 enum WheelMode { numbers, colors, gongs, sounds }
 
@@ -15,7 +15,7 @@ class CustomTimeWheel extends StatefulWidget {
   final ScrollController? scrollController;
   final int? autoScrollToItem;
   final WheelMode mode;
-  final List<String>? colorNames; // This line was missing
+  final List<String>? colorNames;
 
   const CustomTimeWheel({
     super.key,
@@ -27,8 +27,8 @@ class CustomTimeWheel extends StatefulWidget {
     this.perspective = 0.009,
     this.scrollController,
     this.autoScrollToItem,
-    this.mode = WheelMode.numbers, // Default to numbers mode
-    this.colorNames, // Ensure this is added
+    this.mode = WheelMode.numbers,
+    this.colorNames,
   });
 
   @override
@@ -41,20 +41,21 @@ class _CustomTimeWheelState extends State<CustomTimeWheel> {
   @override
   void initState() {
     super.initState();
-    _scrollController = widget.scrollController ?? FixedExtentScrollController(initialItem: widget.selectedValue);
+    _scrollController = widget.scrollController ??
+        FixedExtentScrollController(initialItem: widget.selectedValue);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients && widget.autoScrollToItem != null) {
-        final fixedExtentScrollController = _scrollController as FixedExtentScrollController;
+        final fixedExtentScrollController =
+            _scrollController as FixedExtentScrollController;
 
         fixedExtentScrollController.animateToItem(
-          widget.autoScrollToItem!, // Use the autoScrollToItem value
+          widget.autoScrollToItem!,
           duration: const Duration(seconds: 1, milliseconds: 500),
           curve: Curves.easeInOut,
         );
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +74,8 @@ class _CustomTimeWheelState extends State<CustomTimeWheel> {
             final double opacity = isSelected
                 ? 1.0
                 : (1 / (1 + (index - widget.selectedValue).abs() * 0.5))
-                .clamp(0.1, 1.0);
+                    .clamp(0.1, 1.0);
 
-            // Conditional content based on the mode
             Widget content;
             switch (widget.mode) {
               case WheelMode.numbers:
@@ -83,40 +83,45 @@ class _CustomTimeWheelState extends State<CustomTimeWheel> {
                   index.toString().padLeft(2, '0'),
                   style: TextStyle(
                     fontSize: isSelected ? 42 : 40,
-                    color: isSelected ? Colors.white : Colors.white.withOpacity(opacity),
+                    color: isSelected
+                        ? Colors.white
+                        : Colors.white.withOpacity(opacity),
                     fontWeight: FontWeight.bold,
                   ),
                 );
                 break;
               case WheelMode.colors:
-              // Assuming GradientTheme.names[index] gives the name of the color
                 content = Text(
                   GradientColors.names[index],
                   style: TextStyle(
                     fontSize: isSelected ? 24 : 20,
-                    color: isSelected ? Colors.white : Colors.white.withOpacity(opacity),
+                    color: isSelected
+                        ? Colors.white
+                        : Colors.white.withOpacity(opacity),
                     fontWeight: FontWeight.bold,
                   ),
                 );
                 break;
               case WheelMode.gongs:
-              // Assuming GradientTheme.names[index] gives the name of the color
                 content = Text(
                   GongSounds.names[index],
                   style: TextStyle(
                     fontSize: isSelected ? 24 : 20,
-                    color: isSelected ? Colors.white : Colors.white.withOpacity(opacity),
+                    color: isSelected
+                        ? Colors.white
+                        : Colors.white.withOpacity(opacity),
                     fontWeight: FontWeight.bold,
                   ),
                 );
                 break;
               case WheelMode.sounds:
-              // Assuming GradientTheme.names[index] gives the name of the color
                 content = Text(
                   BackgroundsSounds.names[index],
                   style: TextStyle(
                     fontSize: isSelected ? 24 : 20,
-                    color: isSelected ? Colors.white : Colors.white.withOpacity(opacity),
+                    color: isSelected
+                        ? Colors.white
+                        : Colors.white.withOpacity(opacity),
                     fontWeight: FontWeight.bold,
                   ),
                 );
@@ -138,12 +143,9 @@ class _CustomTimeWheelState extends State<CustomTimeWheel> {
 
   @override
   void dispose() {
-    // Only dispose the controller if it was created here
     if (widget.scrollController == null) {
       _scrollController.dispose();
     }
     super.dispose();
   }
 }
-
-

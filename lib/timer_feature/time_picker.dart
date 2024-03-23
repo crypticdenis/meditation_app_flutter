@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'custom_time_wheel.dart';
+import '../custom_time_wheel.dart';
 
 class TimePicker extends StatefulWidget {
   final int initialMinute;
-  final Function(int) onTimeSelected; // Callback for selected time
+  final Function(int) onTimeSelected;
 
   const TimePicker({
     super.key,

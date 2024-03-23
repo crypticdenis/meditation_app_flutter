@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'home.dart'; // Ensure this file exists and is correctly named in your project.
+import 'home/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'providers/theme_provider.dart';
-import  'providers/timer_provider.dart';
-import  'providers/gong_provider.dart';
+import 'providers/timer_provider.dart';
+import 'providers/gong_provider.dart';
 import 'providers/meditation_time_provider.dart';
-import  'providers/streak_provider.dart';
+import 'providers/streak_provider.dart';
 import 'providers/sound_provider.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Always initializing Firebase with specific options:
   await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyArYkJDXLe559FpwXl0HoL-7sUFwSN1Vc4",
