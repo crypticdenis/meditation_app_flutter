@@ -1,2 +1,3 @@
 # meditation_app_flutter
-A Meditation App for mobile devices
+An App that simplyfies your Meditation by helping you track your Progress and 
+giving you a soothing and unique experience through customization. 
