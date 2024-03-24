@@ -8,12 +8,27 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
   bool _shouldResume = false;
+  bool _soundEnabled = true;
+
 
   int get currentSoundIndex => _currentSoundIndex;
+  bool get soundEnabled => _soundEnabled;
 
   BackgroundSoundProvider() {
     _audioPlayer.setReleaseMode(ReleaseMode.loop);
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  void toggleSoundEnabled() {
+    _soundEnabled = !_soundEnabled;
+    if (_soundEnabled) {
+      // Resume sound if it was playing before being disabled
+      initializeAndPlayLoop();
+    } else {
+      // Stop sound if sound is being disabled
+      stop();
+    }
+    notifyListeners();
   }
 
   @override
@@ -38,6 +53,7 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void play() async {
+    if (!_soundEnabled) return; // Do not play if sound is disabled
     await _audioPlayer.resume();
     _isPlaying = true;
     _shouldResume = false;

@@ -21,14 +21,47 @@ class SoundSelectionScreen extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: themeProvider.currentGradient,
         ),
-        child: Center(
-          child: CustomTimeWheel(
-            itemCount: BackgroundsSounds.names.length,
-            selectedValue: soundProvider.currentSoundIndex,
-            onSelectedItemChanged: (index) => soundProvider.setSound(index),
-            mode: WheelMode.sounds,
-            colorNames: BackgroundsSounds.names,
-          ),
+        child: Column(
+          children: [
+            const SizedBox(height: 100),
+            Padding(
+              padding:
+              const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Soundscape enabled',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Switch(
+                    value: soundProvider.soundEnabled,
+                    onChanged: (bool value) {
+                      soundProvider.toggleSoundEnabled();
+                    },
+                    activeColor: Colors.black,
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: CustomTimeWheel(
+                  itemCount: BackgroundsSounds.names.length,
+                  selectedValue: soundProvider.currentSoundIndex,
+                  onSelectedItemChanged: (index) =>
+                      soundProvider.setSound(index),
+                  mode: WheelMode.sounds,
+                  colorNames: BackgroundsSounds.names,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -8,6 +8,7 @@ import 'providers/gong_provider.dart';
 import 'providers/meditation_time_provider.dart';
 import 'providers/streak_provider.dart';
 import 'providers/sound_provider.dart';
+import 'providers/settings_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => BackgroundSoundProvider()),
+        ChangeNotifierProvider(create: (context) => SettingsProvider()),
         ChangeNotifierProvider(create: (context) => ScrollWheelIndexProvider()),
         ChangeNotifierProvider(create: (context) => StreakProvider()),
         ChangeNotifierProvider(create: (context) => GongProvider()),

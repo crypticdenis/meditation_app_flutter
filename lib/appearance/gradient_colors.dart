@@ -5,12 +5,7 @@ class GradientColors {
     const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF123456), Color(0xFF654321)],
-    ),
-    const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFFFF6E7F), Color(0xFFFFB88C)],
+      colors: [Color(0xFF43cea2), Color(0xFF185a9d)], // Seafoam Blue
     ),
     const LinearGradient(
       begin: Alignment.topLeft,
@@ -36,6 +31,11 @@ class GradientColors {
     const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
+      colors: [Color(0xFF123456), Color(0xFF654321)],
+    ),
+    const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
       colors: [Color(0xFF00467F), Color(0xFFFFB88C)], // Twilight Blues and Oranges
     ),
     const LinearGradient(
@@ -51,12 +51,12 @@ class GradientColors {
     const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF654ea3), Color(0xFFeaafc8)], // Lavender Field
+      colors: [Color(0xFFFF6E7F), Color(0xFFFFB88C)],
     ),
     const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF43cea2), Color(0xFF185a9d)], // Seafoam Blue
+      colors: [Color(0xFF654ea3), Color(0xFFeaafc8)], // Lavender Field
     ),
     const LinearGradient(
       begin: Alignment.topLeft,
@@ -71,17 +71,17 @@ class GradientColors {
   ];
 
   static final List<String> names = [
-    'Sunset Orange',
-    'Rose Dawn',
+    'Seafoam Blue',
     'Pink Bloom',
     'Purple Dusk',
     'Deep Ocean Sky',
+    'Sunset Orange',
     'Sunset Twilight',
     'Twilight Blues and Oranges',
     'Royal Purple Lilac',
     'Crimson Fade',
     'Lavender Field',
-    'Seafoam Blue',
+    'Rose Dawn',
     'Warm Sunset',
     'Celestial Dive',
   ];

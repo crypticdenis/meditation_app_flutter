@@ -5,11 +5,12 @@ import '../home/home_screen_buttons.dart';
 import '../meditation/meditation.dart';
 import '../providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import '../appearance/settings.dart';
+import '../appearance/color_settings.dart';
 import '../gong_feature/gong_settings.dart';
 import '../providers/streak_provider.dart';
 import '../providers/sound_provider.dart';
 import '../background_sounds_feature/sound_settings.dart';
+import 'package:meditation_app_flutter/actual_settings_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key});
@@ -23,10 +24,10 @@ class _HomeState extends State<Home> {
     const HomeScreenButton(title: 'Meditation', icon: Icons.spa),
     const HomeScreenButton(title: 'Breathing', icon: Icons.wb_sunny),
     const HomeScreenButton(title: 'Learn', icon: Icons.school),
-    const HomeScreenButton(title: 'Sleep', icon: Icons.nightlight_round),
     const HomeScreenButton(title: 'Backgrounds', icon: Icons.palette),
     const HomeScreenButton(title: 'Gongs', icon: Icons.rice_bowl),
     const HomeScreenButton(title: 'Soundscape', icon: Icons.headphones),
+    const HomeScreenButton(title: 'Settings', icon: Icons.settings),
   ];
 
   @override
@@ -132,15 +133,6 @@ class _HomeState extends State<Home> {
           ),
         );
         break;
-
-      case 'Sleep':
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SleepScreen(),
-          ),
-        );
-        break;
       case 'Gongs':
         Navigator.push(
           context,
@@ -154,6 +146,14 @@ class _HomeState extends State<Home> {
           context,
           MaterialPageRoute(
             builder: (context) => const SoundSelectionScreen(),
+          ),
+        );
+        break;
+      case 'Settings':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ActualSettingsScreen(),
           ),
         );
         break;
