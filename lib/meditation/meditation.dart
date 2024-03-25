@@ -8,6 +8,7 @@ import 'package:meditation_app_flutter/timer_feature/timer.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
 import 'package:meditation_app_flutter/providers/meditation_time_provider.dart';
 import 'package:meditation_app_flutter/timer_feature/timer_and_picker_logic.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MeditationScreen extends StatefulWidget {
   const MeditationScreen({Key? key}) : super(key: key);
@@ -17,7 +18,6 @@ class MeditationScreen extends StatefulWidget {
 }
 
 class _MeditationScreenState extends State<MeditationScreen> {
-  final double _opacity = 1.0;
   late TimerLogic timerLogic;
   TimerOperation _timerOperation = TimerOperation.reset;
 
@@ -32,7 +32,6 @@ class _MeditationScreenState extends State<MeditationScreen> {
         });
       },
       onTimerComplete: () {
-        // Handle what happens when the timer completes
         print('Timer completed!');
       },
     );
@@ -54,40 +53,39 @@ class _MeditationScreenState extends State<MeditationScreen> {
         ),
         child: Stack(
           children: [
-            // Always visible TimePicker or TimerWidget depending on _timerOperation
             Column(
               children: [
-                const SizedBox(height: 10), // Ensure there's always some space at the top
+                const SizedBox(height: 10),
                 _timerOperation == TimerOperation.reset
                     ? TimePicker(
-                  initialMinute: meditationTimeProvider.selectedMinute,
-                  onTimeSelected: timerLogic.handleTimeSelected,
-                )
+                        initialMinute: meditationTimeProvider.selectedMinute,
+                        onTimeSelected: timerLogic.handleTimeSelected,
+                      )
                     : TimerWidget(
-                  minute: meditationTimeProvider.selectedMinute,
-                  second: 0,
-                  operation: _timerOperation,
-                  onTimerComplete: () => timerLogic.resetTimer(),
-                  // The display mode is dynamically adjusted based on settings
-                  displayMode: settingsProvider.progressBarEnabled
-                      ? (settingsProvider.timerEnabled
-                      ? TimerDisplayMode.both
-                      : TimerDisplayMode.progressBar)
-                      : (settingsProvider.timerEnabled
-                      ? TimerDisplayMode.timer
-                      : TimerDisplayMode.none),
-                ),
+                        minute: meditationTimeProvider.selectedMinute,
+                        second: 0,
+                        operation: _timerOperation,
+                        onTimerComplete: () => timerLogic.resetTimer(),
+                        // The display mode is dynamically adjusted based on settings
+                        displayMode: settingsProvider.progressBarEnabled
+                            ? (settingsProvider.timerEnabled
+                                ? TimerDisplayMode.both
+                                : TimerDisplayMode.progressBar)
+                            : (settingsProvider.timerEnabled
+                                ? TimerDisplayMode.timer
+                                : TimerDisplayMode.none),
+                      ),
                 if (_timerOperation != TimerOperation.reset)
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: InkWell(
                       onTap: () => timerLogic.cancelTimer(),
-                      child: Image.asset('assets/icons/cross.png', width: 30, height: 30),
+                      child: Image.asset('assets/icons/cross.png',
+                          width: 30, height: 30),
                     ),
                   ),
               ],
             ),
-            // The pause/play button is always visible and functional
             Positioned(
               bottom: 50,
               left: 0,
@@ -95,7 +93,8 @@ class _MeditationScreenState extends State<MeditationScreen> {
               child: InkWell(
                 onTap: () => timerLogic.toggleTimerOperation(_timerOperation),
                 child: Image.asset(
-                  _timerOperation == TimerOperation.pause || _timerOperation == TimerOperation.reset
+                  _timerOperation == TimerOperation.pause ||
+                          _timerOperation == TimerOperation.reset
                       ? 'assets/icons/play.png'
                       : 'assets/icons/pause.png',
                   width: 50,

@@ -1,26 +1,27 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/theme_provider.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
 import 'package:meditation_app_flutter/breathing_screen_files/sinus_painter.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class SinusoidalWaveWidget extends StatefulWidget {
   final TimerOperation? timerOperation;
   final Function(TimerOperation)? onTimerOperationChanged;
 
-  const SinusoidalWaveWidget({super.key, this.timerOperation, this.onTimerOperationChanged});
+  const SinusoidalWaveWidget(
+      {super.key, this.timerOperation, this.onTimerOperationChanged});
 
   @override
   _SinusoidalWaveWidgetState createState() => _SinusoidalWaveWidgetState();
 }
 
-
-
 class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  final AudioPlayer audioPlayer = AudioPlayer();
+
+  DateTime? lastPlayedTime;
 
   @override
   void initState() {
@@ -30,11 +31,12 @@ class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget>
       vsync: this,
     )..repeat();
 
-    _animation = Tween<double>(begin: 0.0, end: 2 * math.pi).animate(_controller)
-      ..addListener(() {
-        setState(() {});
-      });
-    // You can start the animation here if necessary, or wait for the first update.
+    _animation =
+        Tween<double>(begin: 0.0, end: 2 * math.pi).animate(_controller)
+          ..addListener(() {
+            setState(() {});
+            _checkPhaseAndPlaySound(_animation.value);
+          });
   }
 
   @override
@@ -48,27 +50,56 @@ class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget>
   void _handleTimerOperationChange(TimerOperation? operation) {
     if (operation == TimerOperation.pause) {
       _controller.stop();
-    } else if (operation == TimerOperation.start || operation == TimerOperation.reset) {
+    } else if (operation == TimerOperation.start ||
+        operation == TimerOperation.reset) {
       _controller.repeat(reverse: false);
     }
   }
 
+  void _checkPhaseAndPlaySound(double value) {
+    const epsilon = 0.1;
+    DateTime now = DateTime.now();
+
+    if (lastPlayedTime == null ||
+        now.difference(lastPlayedTime!) > Duration(seconds: 1)) {
+      bool isPeak =
+          (value % (2 * math.pi) - math.pi / 2).abs() < epsilon; // Peak at π/2
+      bool isTrough = (value % (2 * math.pi) - 3 * math.pi / 2).abs() <
+          epsilon; // Trough at 3π/2
+
+      if (isPeak) {
+        print("Playing sound at peak");
+        _playSound('gongs/out.mp3');
+      } else if (isTrough) {
+        print("Playing sound at trough");
+        _playSound('gongs/in.mp3');
+      }
+
+      if (isPeak || isTrough) {
+        lastPlayedTime = now;
+      }
+    }
+  }
+
+  Future<void> _playSound(String filePath) async {
+    await audioPlayer.setSource(AssetSource(filePath));
+    await audioPlayer.resume();
+  }
 
   @override
   void dispose() {
     _controller.dispose();
+    audioPlayer.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
     return CustomPaint(
-      painter: SinusoidalPainter(
+      painter: PulsatingCirclePainter(
         phase: _animation.value,
       ),
-      child: Container(height: 5),
+      child: Container(width: double.infinity, height: 200),
     );
   }
 }
-

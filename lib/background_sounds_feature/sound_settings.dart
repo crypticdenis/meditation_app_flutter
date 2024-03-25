@@ -16,7 +16,11 @@ class SoundSelectionScreen extends StatelessWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(title: 'Sound settings'),
+      appBar: CustomAppBar(
+        title: 'My Screen',
+        showSettingsButton: false,
+        showSoundSettingsButton: false,
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: themeProvider.currentGradient,

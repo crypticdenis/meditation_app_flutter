@@ -32,7 +32,6 @@ class _BreathingScreenState extends State<BreathingScreen> {
         });
       },
       onTimerComplete: () {
-        // Handle what happens when the timer completes
         print('Timer completed!');
       },
     );
@@ -83,7 +82,7 @@ class _BreathingScreenState extends State<BreathingScreen> {
               ),
             ),
             if (_timerOperation != TimerOperation.reset)
-              SizedBox(height: 300, child: SinusoidalWaveWidget()),
+              SizedBox(height: 300, child: SinusoidalWaveWidget(timerOperation: _timerOperation)),
             const Spacer(),
             InkWell(
               onTap: () => timerLogic.toggleTimerOperation(_timerOperation),

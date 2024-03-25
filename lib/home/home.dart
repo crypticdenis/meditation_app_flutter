@@ -27,7 +27,6 @@ class _HomeState extends State<Home> {
     const HomeScreenButton(title: 'Backgrounds', icon: Icons.palette),
     const HomeScreenButton(title: 'Gongs', icon: Icons.rice_bowl),
     const HomeScreenButton(title: 'Soundscape', icon: Icons.headphones),
-    const HomeScreenButton(title: 'Settings', icon: Icons.settings),
   ];
 
   @override
@@ -146,14 +145,6 @@ class _HomeState extends State<Home> {
           context,
           MaterialPageRoute(
             builder: (context) => const SoundSelectionScreen(),
-          ),
-        );
-        break;
-      case 'Settings':
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ActualSettingsScreen(),
           ),
         );
         break;

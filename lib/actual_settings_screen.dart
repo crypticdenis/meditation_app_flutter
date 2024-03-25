@@ -5,7 +5,6 @@ import 'package:meditation_app_flutter/custom_app_bar.dart';
 import 'package:meditation_app_flutter/providers/settings_provider.dart';
 import 'package:meditation_app_flutter/providers/sound_provider.dart';
 
-
 class ActualSettingsScreen extends StatelessWidget {
   const ActualSettingsScreen({Key? key}) : super(key: key);
 
@@ -17,7 +16,11 @@ class ActualSettingsScreen extends StatelessWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(title: 'Actual Settings'),
+      appBar: CustomAppBar(
+        title: 'Settings',
+        showSettingsButton: false,
+        showSoundSettingsButton: false,
+      ),
       body: Container(
         padding: EdgeInsets.only(top: 100),
         decoration: BoxDecoration(
@@ -42,7 +45,6 @@ class ActualSettingsScreen extends StatelessWidget {
                   Switch(
                     value: settingsProvider.timerEnabled,
                     onChanged: (value) {
-                      // Directly update the provider's value
                       settingsProvider.setTimerEnabled(value);
                     },
                     activeColor: Colors.black,
@@ -68,7 +70,6 @@ class ActualSettingsScreen extends StatelessWidget {
                   Switch(
                     value: settingsProvider.progressBarEnabled,
                     onChanged: (value) {
-                      // Directly update the provider's value
                       settingsProvider.setProgressBarEnabled(value);
                     },
                     activeColor: Colors.black,
