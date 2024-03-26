@@ -2,87 +2,73 @@ import 'package:flutter/material.dart';
 
 class GradientColors {
   static final List<LinearGradient> gradients = [
+    // Midnight Pine
     const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF43cea2), Color(0xFF185a9d)], // Seafoam Blue
+      colors: [Color(0xFF00332C), Color(0xFF000033)], // Deep Forest Green to Midnight Blue
+    ),
+    // Twilight Mauve
+    const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFF4B253A), Color(0xFF423B42)], // Dark Mauve to Twilight Grey
+    ),
+    // Dusk Amber
+    const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFF4A2C00), Color(0xFF1B1B1B)], // Deep Amber to Dark Earth
+    ),
+    // Ocean Depths
+    const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFF003B46), Color(0xFF1B2A49)], // Deep Teal to Dark Slate Blue
+    ),
+    // Gothic Rose
+    const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFF45171D), Color(0xFF2F2F31)], // Dark Rose to Gothic Gray
     ),
     const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFFf80759), Color(0xFFbc4e9c)],
+      colors: [Color(0xFF0E0F0F), Color(0xFF334756)], // Midnight Blue
     ),
     const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF590677), Color(0xFF19163C)], // Purple Dusk
-    ),
-    // New gradients that complement white fonts
-    const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF0072ff), Color(0xFF00c6ff)], // Deep Ocean to Sky Blue
+      colors: [Color(0xFF202020), Color(0xFF646F4E)], // Dark Moss
     ),
     const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFFfa709a), Color(0xFFfee140)], // Sunset Twilight
+      colors: [Color(0xFF0A0F0B), Color(0xFF3C6E71)], // Forest Whisper
     ),
     const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF123456), Color(0xFF654321)],
+      colors: [Color(0xFF000000), Color(0xFF575600)], // Night Lemon
     ),
     const LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [Color(0xFF00467F), Color(0xFFFFB88C)], // Twilight Blues and Oranges
-    ),
-    const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF6a11cb), Color(0xFF2575fc)], // Royal Purple to Soft Lilac
-    ),
-    const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF333333), Color(0xFFdd1818)], // Crimson Fade
-    ),
-    const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFFFF6E7F), Color(0xFFFFB88C)],
-    ),
-    const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFF654ea3), Color(0xFFeaafc8)], // Lavender Field
-    ),
-    const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [Color(0xFFff9966), Color(0xFFff5e62)], // Warm Sunset
-    ),
-    const LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color(0xFF12c2e9), Color(0xFFc471ed), Color(0xFFf64f59)], // Celestial Dive
+      colors: [Color(0xFF343837), Color(0xFF005F6B)], // Teal Shadow
     ),
   ];
 
   static final List<String> names = [
-    'Seafoam Blue',
-    'Pink Bloom',
-    'Purple Dusk',
-    'Deep Ocean Sky',
-    'Sunset Orange',
-    'Sunset Twilight',
-    'Twilight Blues and Oranges',
-    'Royal Purple Lilac',
-    'Crimson Fade',
-    'Lavender Field',
-    'Rose Dawn',
-    'Warm Sunset',
-    'Celestial Dive',
+    'Midnight Pine',
+    'Twilight Mauve',
+    'Dusk Amber',
+    'Ocean Depths',
+    'Gothic Rose',
+    'Midnight Blue',
+    'Dark Moss',
+    'Forest Whisper',
+    'Night Lemon',
+    'Teal Shadow',
   ];
 }

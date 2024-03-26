@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../common_definitions.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../gong_feature/gongs.dart';
@@ -34,6 +33,8 @@ class _TimerWidgetState extends State<TimerWidget> {
   late int _remainingSeconds;
   late int _totalSeconds;
   Timer? _timer;
+  int _elapsedTicks = 0; // Add this line
+  int _totalTicks = 0; // And this line
 
   @override
   void initState() {
@@ -80,10 +81,21 @@ class _TimerWidgetState extends State<TimerWidget> {
     print("this _startTimer is in use ");
     _playGongSound();
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_remainingSeconds > 0) {
+
+    int updatesPerSecond = 10;
+    int tickDurationInMillis = 1000 ~/ updatesPerSecond;
+    _totalTicks = _totalSeconds *
+        updatesPerSecond; // Ensure this is outside the Timer.periodic
+    _elapsedTicks = 0;
+
+    _timer =
+        Timer.periodic(Duration(milliseconds: tickDurationInMillis), (timer) {
+      if (_elapsedTicks < _totalTicks) {
         setState(() {
-          _remainingSeconds--;
+          _elapsedTicks++;
+          _remainingSeconds =
+              _totalSeconds - (_elapsedTicks ~/ updatesPerSecond);
+          _remainingSeconds = _remainingSeconds < 0 ? 0 : _remainingSeconds;
         });
       } else {
         _timer?.cancel();
@@ -160,7 +172,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     final minutes = twoDigits(_remainingSeconds ~/ 60);
     final seconds = twoDigits(_remainingSeconds % 60);
-    double progress = (_totalSeconds - _remainingSeconds) / _totalSeconds;
+    double progress = _elapsedTicks / _totalTicks.toDouble();
 
     // Conditional rendering based on the display mode
     return Center(
@@ -168,9 +180,10 @@ class _TimerWidgetState extends State<TimerWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(top: 100), // Updated to 200
+            padding: const EdgeInsets.only(top: 100),
             child: Column(
               children: <Widget>[
+                // Use a condition to check whether to display the progress bar or a placeholder
                 if (widget.displayMode == TimerDisplayMode.both ||
                     widget.displayMode == TimerDisplayMode.progressBar)
                   SizedBox(
@@ -200,6 +213,13 @@ class _TimerWidgetState extends State<TimerWidget> {
                           ),
                       ],
                     ),
+                  )
+                else
+                  // Placeholder Container
+                  Container(
+                    width: 150,
+                    height: 90,
+                    // Optionally, you can make this transparent or match the background.
                   ),
                 if (widget.displayMode == TimerDisplayMode.timer)
                   Text(
@@ -210,16 +230,10 @@ class _TimerWidgetState extends State<TimerWidget> {
                       color: Colors.white,
                     ),
                   ),
-                if (widget.displayMode == TimerDisplayMode.none)
-                  Text(
-                    'Enable Timer in Settings',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
+                Container(
+                  width: 150,
+                  height: 20,
+                ),
               ],
             ),
           ),

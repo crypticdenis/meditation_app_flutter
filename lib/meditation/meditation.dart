@@ -79,7 +79,36 @@ class _MeditationScreenState extends State<MeditationScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: InkWell(
-                      onTap: () => timerLogic.cancelTimer(),
+                      onTap: () {
+                        // Show confirmation dialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Cancel Timer'),
+                              content: const Text(
+                                  'Are you sure you want to cancel the timer?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                  child: const Text('No'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Cancel the timer and close the dialog
+                                    timerLogic.cancelTimer();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Yes'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       child: Image.asset('assets/icons/cross.png',
                           width: 30, height: 30),
                     ),
