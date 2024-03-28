@@ -46,7 +46,7 @@ class _MeditationScreenState extends State<MeditationScreen> {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(title: 'Meditation'),
+      appBar: CustomAppBar(title: ''),
       body: Container(
         decoration: BoxDecoration(
           gradient: themeProvider.currentGradient,
@@ -55,7 +55,50 @@ class _MeditationScreenState extends State<MeditationScreen> {
           children: [
             Column(
               children: [
-                const SizedBox(height: 10),
+                if (_timerOperation != TimerOperation.reset)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 150),
+                    child: InkWell(
+                      onTap: () {
+                        // Show confirmation dialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Quit Session ?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all(Colors.black),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                  child: const Text('No'),
+                                ),
+                                TextButton(
+                                  style: ButtonStyle(
+                                    foregroundColor:
+                                        MaterialStateProperty.all(Colors.red),
+                                  ),
+                                  onPressed: () {
+                                    // Cancel the timer and close the dialog
+                                    timerLogic.cancelTimer();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Yes'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Image.asset('assets/icons/cross.png',
+                          width: 20, height: 20),
+                    ),
+                  ),
                 _timerOperation == TimerOperation.reset
                     ? TimePicker(
                         initialMinute: meditationTimeProvider.selectedMinute,
@@ -75,44 +118,6 @@ class _MeditationScreenState extends State<MeditationScreen> {
                                 ? TimerDisplayMode.timer
                                 : TimerDisplayMode.none),
                       ),
-                if (_timerOperation != TimerOperation.reset)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: InkWell(
-                      onTap: () {
-                        // Show confirmation dialog
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Cancel Timer'),
-                              content: const Text(
-                                  'Are you sure you want to cancel the timer?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                  child: const Text('No'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Cancel the timer and close the dialog
-                                    timerLogic.cancelTimer();
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Yes'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: Image.asset('assets/icons/cross.png',
-                          width: 30, height: 30),
-                    ),
-                  ),
               ],
             ),
             Positioned(

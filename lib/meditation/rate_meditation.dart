@@ -32,7 +32,7 @@ class RateMeditationDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-              'How was your Experience today, Denis?',
+              'How was your Session today ?',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,

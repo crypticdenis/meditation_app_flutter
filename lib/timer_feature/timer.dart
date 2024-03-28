@@ -180,7 +180,7 @@ class _TimerWidgetState extends State<TimerWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(top: 100),
+            padding: const EdgeInsets.only(top: 10),
             child: Column(
               children: <Widget>[
                 // Use a condition to check whether to display the progress bar or a placeholder
