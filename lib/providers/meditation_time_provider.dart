@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MeditationTimeProvider with ChangeNotifier {
-  int _selectedMinute = 10;
+  int _selectedMinute = 0;
 
   int get selectedMinute => _selectedMinute;
 

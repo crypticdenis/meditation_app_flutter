@@ -22,7 +22,7 @@ class CustomTimeWheel extends StatefulWidget {
     required this.itemCount,
     required this.onSelectedItemChanged,
     required this.selectedValue,
-    this.itemExtent = 55,
+    this.itemExtent = 65,
     this.diameterRatio = 1.5,
     this.perspective = 0.009,
     this.scrollController,
@@ -82,7 +82,7 @@ class _CustomTimeWheelState extends State<CustomTimeWheel> {
                 content = Text(
                   index.toString().padLeft(2, '0'),
                   style: TextStyle(
-                    fontSize: isSelected ? 42 : 40,
+                    fontSize: isSelected ? 53 : 50,
                     color: isSelected
                         ? Colors.white
                         : Colors.white.withOpacity(opacity),

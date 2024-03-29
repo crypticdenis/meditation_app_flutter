@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
 import 'package:meditation_app_flutter/providers/settings_provider.dart';
-import 'package:meditation_app_flutter/custom_app_bar.dart';
 import 'package:meditation_app_flutter/timer_feature/time_picker.dart';
 import 'package:meditation_app_flutter/timer_feature/timer.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
 import 'package:meditation_app_flutter/providers/meditation_time_provider.dart';
 import 'package:meditation_app_flutter/timer_feature/timer_and_picker_logic.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:meditation_app_flutter/background_sounds_feature/sound_settings.dart';
+import 'package:meditation_app_flutter/actual_settings_screen.dart';
+import 'meditation_preselect.dart';
 
 class MeditationScreen extends StatefulWidget {
-  const MeditationScreen({Key? key}) : super(key: key);
+  const MeditationScreen({super.key});
 
   @override
   _MeditationScreenState createState() => _MeditationScreenState();
@@ -45,80 +46,40 @@ class _MeditationScreenState extends State<MeditationScreen> {
 
     return Scaffold(
       extendBody: true,
-      extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(title: ''),
       body: Container(
         decoration: BoxDecoration(
-          gradient: themeProvider.currentGradient,
+          gradient:
+              themeProvider.currentGradient, // Ensure themeProvider is defined
         ),
         child: Stack(
           children: [
-            Column(
-              children: [
-                if (_timerOperation != TimerOperation.reset)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 150),
-                    child: InkWell(
-                      onTap: () {
-                        // Show confirmation dialog
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Quit Session ?'),
-                              actions: <Widget>[
-                                TextButton(
-                                  style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStateProperty.all(Colors.black),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(); // Close the dialog
-                                  },
-                                  child: const Text('No'),
-                                ),
-                                TextButton(
-                                  style: ButtonStyle(
-                                    foregroundColor:
-                                        MaterialStateProperty.all(Colors.red),
-                                  ),
-                                  onPressed: () {
-                                    // Cancel the timer and close the dialog
-                                    timerLogic.cancelTimer();
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('Yes'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: Image.asset('assets/icons/cross.png',
-                          width: 20, height: 20),
-                    ),
-                  ),
-                _timerOperation == TimerOperation.reset
-                    ? TimePicker(
-                        initialMinute: meditationTimeProvider.selectedMinute,
-                        onTimeSelected: timerLogic.handleTimeSelected,
-                      )
-                    : TimerWidget(
-                        minute: meditationTimeProvider.selectedMinute,
-                        second: 0,
-                        operation: _timerOperation,
-                        onTimerComplete: () => timerLogic.resetTimer(),
-                        // The display mode is dynamically adjusted based on settings
-                        displayMode: settingsProvider.progressBarEnabled
-                            ? (settingsProvider.timerEnabled
-                                ? TimerDisplayMode.both
-                                : TimerDisplayMode.progressBar)
-                            : (settingsProvider.timerEnabled
-                                ? TimerDisplayMode.timer
-                                : TimerDisplayMode.none),
-                      ),
-              ],
+            Align(
+              alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _timerOperation == TimerOperation.reset
+                        ? TimePicker(
+                            initialMinute:
+                                meditationTimeProvider.selectedMinute,
+                            onTimeSelected: timerLogic.handleTimeSelected,
+                          )
+                        : TimerWidget(
+                            minute: meditationTimeProvider.selectedMinute,
+                            second: 0,
+                            operation: _timerOperation,
+                            onTimerComplete: () => timerLogic.resetTimer(),
+                            // The display mode is dynamically adjusted based on settings
+                            displayMode: settingsProvider.progressBarEnabled
+                                ? (settingsProvider.timerEnabled
+                                    ? TimerDisplayMode.both
+                                    : TimerDisplayMode.progressBar)
+                                : (settingsProvider.timerEnabled
+                                    ? TimerDisplayMode.timer
+                                    : TimerDisplayMode.none),
+                          ),
+                  ],
+              ),
             ),
             Positioned(
               bottom: 50,
@@ -133,6 +94,87 @@ class _MeditationScreenState extends State<MeditationScreen> {
                       : 'assets/icons/pause.png',
                   width: 50,
                   height: 50,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 50, right: 15),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.music_note, color: Colors.white),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SoundSelectionScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings, color: Colors.white),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ActualSettingsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 50, right: 16),
+                child: IconButton(
+                  icon: Icon(Icons.close),
+                  color: Colors.red, // Close icon
+                  onPressed: () {
+                    // Show confirmation dialog
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Quit Session?'),
+                          actions: <Widget>[
+                            TextButton(
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all(Colors.black),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                              child: const Text('No'),
+                            ),
+                            TextButton(
+                              style: ButtonStyle(
+                                foregroundColor:
+                                    MaterialStateProperty.all(Colors.red),
+                              ),
+                              onPressed: () {
+                                // Perform your logic here, e.g., cancel the timer
+                                // Assuming `timerLogic.cancelTimer()` is your method to cancel the timer
+                                timerLogic.cancelTimer();
+                                // Then pop the current screen off the navigation stack
+                                Navigator.of(context).pop(); // Close the dialog
+                                Navigator.of(context).pop(); // Navigate back
+                              },
+                              child: const Text('Yes'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ),

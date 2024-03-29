@@ -13,8 +13,6 @@ class SettingsScreen extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(title: 'Settings'),
       body: Container(
         decoration: BoxDecoration(
           gradient: themeProvider.currentGradient,

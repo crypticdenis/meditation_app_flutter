@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../common_definitions.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../gong_feature/gongs.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../providers/streak_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../meditation/rate_meditation.dart';
+import 'package:meditation_app_flutter/home/home.dart';
 
 class TimerWidget extends StatefulWidget {
   final int minute;
@@ -33,8 +35,6 @@ class _TimerWidgetState extends State<TimerWidget> {
   late int _remainingSeconds;
   late int _totalSeconds;
   Timer? _timer;
-  int _elapsedTicks = 0; // Add this line
-  int _totalTicks = 0; // And this line
 
   @override
   void initState() {
@@ -81,21 +81,10 @@ class _TimerWidgetState extends State<TimerWidget> {
     print("this _startTimer is in use ");
     _playGongSound();
     _timer?.cancel();
-
-    int updatesPerSecond = 10;
-    int tickDurationInMillis = 1000 ~/ updatesPerSecond;
-    _totalTicks = _totalSeconds *
-        updatesPerSecond; // Ensure this is outside the Timer.periodic
-    _elapsedTicks = 0;
-
-    _timer =
-        Timer.periodic(Duration(milliseconds: tickDurationInMillis), (timer) {
-      if (_elapsedTicks < _totalTicks) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
         setState(() {
-          _elapsedTicks++;
-          _remainingSeconds =
-              _totalSeconds - (_elapsedTicks ~/ updatesPerSecond);
-          _remainingSeconds = _remainingSeconds < 0 ? 0 : _remainingSeconds;
+          _remainingSeconds--;
         });
       } else {
         _timer?.cancel();
@@ -125,35 +114,41 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   void _handleTimerComplete() async {
-    print("this _handleTimerComplete is in use ");
+    print("This _handleTimerComplete is in use");
+
+    // Navigate after all logic is performed and the dialog is dismissed
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Home()), // Assuming Home is defined elsewhere
+    );
+
     final streakProvider = Provider.of<StreakProvider>(context, listen: false);
     final lastReset = await getLastIncrementDateFromStorage();
-    final lastResetDay =
-        DateTime(lastReset.year, lastReset.month, lastReset.day);
-    final today = DateTime.now();
-    final todayDay = DateTime(today.year, today.month, today.day);
+    final today = DateTime.now().toUtc();
+    final differenceInDays = DateTime(today.year, today.month, today.day)
+        .difference(DateTime(lastReset.year, lastReset.month, lastReset.day))
+        .inDays;
 
-    showDialog(
+    // Assuming streak == 0 indicates the user hasn't started a streak yet or it was reset
+    if (differenceInDays == 0 && streakProvider.streak > 0) {
+      // User already interacted today, so don't change the streak.
+    } else if (differenceInDays == 1) {
+      streakProvider.incrementStreak(); // Continue streak
+    } else if (differenceInDays > 1) {
+      streakProvider.resetStreak(); // Reset streak if more than a day has passed
+    } else if (streakProvider.streak == 0) {
+      streakProvider.incrementStreak(); // Start streak
+    }
+
+    // Show dialog to rate meditation
+    await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return RateMeditationDialog();
+          return RateMeditationDialog(); // Assuming this is defined elsewhere
         });
-
-    if (lastResetDay.isBefore(todayDay)) {
-      streakProvider.incrementStreak();
-      print(lastResetDay);
-      print("streak +1");
-      _resetTimer();
-    } else {
-      _timer?.cancel();
-    }
-
-    if (widget.onTimerComplete != null) {
-      widget.onTimerComplete!();
-      print("same same");
-      print(lastResetDay);
-    }
   }
+
+
 
   void _pauseTimer() {
     print("this _pauseTimer is in use ");
@@ -172,7 +167,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     final minutes = twoDigits(_remainingSeconds ~/ 60);
     final seconds = twoDigits(_remainingSeconds % 60);
-    double progress = _elapsedTicks / _totalTicks.toDouble();
+    double progress = (_totalSeconds - _remainingSeconds) / _totalSeconds;
 
     // Conditional rendering based on the display mode
     return Center(
@@ -180,10 +175,9 @@ class _TimerWidgetState extends State<TimerWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 100), // Updated to 200
             child: Column(
               children: <Widget>[
-                // Use a condition to check whether to display the progress bar or a placeholder
                 if (widget.displayMode == TimerDisplayMode.both ||
                     widget.displayMode == TimerDisplayMode.progressBar)
                   SizedBox(
@@ -213,13 +207,6 @@ class _TimerWidgetState extends State<TimerWidget> {
                           ),
                       ],
                     ),
-                  )
-                else
-                  // Placeholder Container
-                  Container(
-                    width: 150,
-                    height: 90,
-                    // Optionally, you can make this transparent or match the background.
                   ),
                 if (widget.displayMode == TimerDisplayMode.timer)
                   Text(
@@ -230,10 +217,16 @@ class _TimerWidgetState extends State<TimerWidget> {
                       color: Colors.white,
                     ),
                   ),
-                Container(
-                  width: 150,
-                  height: 20,
-                ),
+                if (widget.displayMode == TimerDisplayMode.none)
+                  Text(
+                    'Enable Timer in Settings',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
               ],
             ),
           ),

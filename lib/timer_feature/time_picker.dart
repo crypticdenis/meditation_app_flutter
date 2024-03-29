@@ -30,9 +30,7 @@ class TimerState extends State<TimePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 300),
-      child: Row(
+    return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
@@ -58,12 +56,11 @@ class TimerState extends State<TimePicker> {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 32,
+                fontSize: 42,
               ),
             ),
           ),
         ],
-      ),
     );
   }
 }
