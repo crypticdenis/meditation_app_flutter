@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'meditation_session_controller.dart';
 
 class RateMeditationDialog extends StatelessWidget {
   const RateMeditationDialog({super.key});
@@ -9,6 +10,8 @@ class RateMeditationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final gradient = themeProvider.currentGradient;
+    final MeditationSessionController controller = MeditationSessionController(); // Instance of the controller
+
 
     return AlertDialog(
       shape: RoundedRectangleBorder(
@@ -47,6 +50,7 @@ class RateMeditationDialog extends StatelessWidget {
                   padding: const EdgeInsets.all(4.0),
                   child: InkWell(
                     onTap: () {
+                      controller.saveSessionRating(context, i);
                       print('Selected rating: $i');
                       Navigator.pop(context, i);
                     },

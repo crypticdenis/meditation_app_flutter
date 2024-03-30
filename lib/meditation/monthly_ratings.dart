@@ -4,47 +4,46 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/ratings_provider.dart';
 
-class WeekRatingWidget extends StatelessWidget {
-  WeekRatingWidget({Key? key}) : super(key: key);
+class MonthRatingWidget extends StatelessWidget {
+  MonthRatingWidget({Key? key}) : super(key: key);
 
-  final daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  final DateFormat dateFormat = DateFormat('yyyy-MM-dd'); // Use the same format as in RatingsProvider
+  final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
 
-  Color getColorBasedOnValue(double value) {
-    List<Color> colorGradient = [
-      Colors.red, // 1
-      Colors.deepOrange, // 2
-      Colors.orangeAccent, // 3
-      Colors.lightGreen, // 4
-      Colors.green // 5
-    ];
-    int index = (value.clamp(1, 5)).round() - 1; // Adjusted to use 0-based index
-    return colorGradient[index];
-  }
+Color getColorBasedOnValue(double value) {
+  List<Color> colorGradient = [
+    Colors.red, // 1
+    Colors.deepOrange, // 2
+    Colors.orangeAccent, // 3
+    Colors.lightGreen, // 4
+    Colors.green // 5
+  ];
+  int index = (value.clamp(1, 5)).round() - 1; // Adjusted to use 0-based index
+  return colorGradient[index];
+}
 
-  DateTime getWeekStart(DateTime current) {
-    int daysFromMonday = current.weekday - 1;
-    return current.subtract(Duration(days: daysFromMonday));
-  }
 
   @override
   Widget build(BuildContext context) {
     final Map<String, int> sampleRatings = Provider.of<RatingsProvider>(context).ratings;
 
-    final List<BarChartGroupData> barGroups = List.generate(7, (index) {
-      final weekStartDate = getWeekStart(DateTime.now());
-      final date = weekStartDate.add(Duration(days: index));
+    DateTime now = DateTime.now();
+    int daysInMonth = DateUtils.getDaysInMonth(now.year, now.month);
+    final List<BarChartGroupData> barGroups = List.generate(daysInMonth, (index) {
+      // Use the first day of the month and add index to get the current day
+      final date = DateTime(now.year, now.month, index + 1);
       final dateString = dateFormat.format(date);
-
       final entryValue = sampleRatings[dateString] ?? 0;
+
+      // Calculate the width of the bar based on the number of days in the month
+      double barWidth = MediaQuery.of(context).size.width / (daysInMonth * 2);
 
       return BarChartGroupData(
         x: index,
         barRods: [
           BarChartRodData(
-            toY: entryValue.toDouble(), // Directly using the rating value as the height
+            toY: entryValue.toDouble(),
             color: getColorBasedOnValue(entryValue.toDouble()),
-            width: 22,
+            width: barWidth,
           ),
         ],
       );
@@ -66,12 +65,17 @@ class WeekRatingWidget extends StatelessWidget {
           titlesData: FlTitlesData(
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) => Padding(
-                  padding: const EdgeInsets.only(top: 6.0),
-                  child: Text(daysOfWeek[value.toInt() % daysOfWeek.length],
-                      style: const TextStyle(color: Colors.white, fontSize: 12)),
-                ),
+                showTitles: false,
+                getTitlesWidget: (value, meta) {
+                  // Show day of the month
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 6.0),
+                    child: Text((value.toInt() + 1).toString(),
+                        style: const TextStyle(color: Colors.white, fontSize: 10)),
+                  );
+                },
+                reservedSize: 32,
+                interval: 1,
               ),
             ),
             leftTitles: AxisTitles(

@@ -13,6 +13,8 @@ import 'package:meditation_app_flutter/breathing_screen_files/breathing_preselec
 import 'package:meditation_app_flutter/home/week_rating_widget.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:meditation_app_flutter/providers/sound_provider.dart';
+import 'package:meditation_app_flutter/providers/ratings_provider.dart';
+import 'package:meditation_app_flutter/meditation/monthly_ratings.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -25,10 +27,14 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   late Future<void> _initFuture;
   late StreakProvider _streakProvider;
+  late RatingsProvider _ratingsProvider;
+
 
   @override
   void initState() {
     super.initState();
+    _ratingsProvider = Provider.of<RatingsProvider>(context, listen: false);
+    _initFuture = _ratingsProvider.init();
     _streakProvider = Provider.of<StreakProvider>(context, listen: false);
     _initFuture = _streakProvider.init();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -85,7 +91,7 @@ class _HomeState extends State<Home> {
                     iconSize: 24,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     duration: Duration(milliseconds: 400),
-                    tabBackgroundColor: Colors.black.withOpacity(0.5),
+                    tabBackgroundColor: Colors.white12,
                     color: Colors.white,
                     tabs: [
                       GButton(
@@ -139,15 +145,7 @@ class HomeScreen extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final streakProvider = Provider.of<StreakProvider>(context);
     final currentStreak = streakProvider.streak;
-    final Map<String, int> ratings = {
-      '2024-03-25': 1,
-      '2024-03-26': 3,
-      '2024-03-27': 2,
-      '2024-03-28': 4,
-      '2024-03-29': 5,
-      '2024-03-30': 2,
-      '2024-03-31': 1,
-    };
+
 
     return Scaffold(
       body: Container(
@@ -212,7 +210,7 @@ class HomeScreen extends StatelessWidget {
             Container(
               margin: const EdgeInsets.all(15.0),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.white12,
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Column(
@@ -227,9 +225,37 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.only( top: 15.0),
+              child: Text(
+                'Weekly Ratings',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
             Align(
               alignment: Alignment.center, // Customize alignment as needed
               child: WeekRatingWidget(),
+            ),
+            const Padding(
+              padding: EdgeInsets.only( top: 15.0),
+              child: Text(
+                'Monthly Ratings',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ),
+            Align(
+              alignment: Alignment.center, // Customize alignment as needed
+              child: MonthRatingWidget(),
             ),
           ],
         ),

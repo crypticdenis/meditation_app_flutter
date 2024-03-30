@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 // Enum used to control the TimerWidget's state.
 enum TimerOperation { start, pause, resume, reset }
+
 enum TimerDisplayMode {
   none,
   progressBar,
@@ -17,11 +19,13 @@ Future<bool> showCancelConfirmationDialog(BuildContext context) async {
       content: const Text('Are you sure you want to cancel the timer?'),
       actions: <Widget>[
         TextButton(
-          onPressed: () => Navigator.of(context).pop(false), // Return false on cancel
+          onPressed: () => Navigator.of(context).pop(false),
+          // Return false on cancel
           child: const Text('No'),
         ),
         TextButton(
-          onPressed: () => Navigator.of(context).pop(true), // Return true on confirm
+          onPressed: () => Navigator.of(context).pop(true),
+          // Return true on confirm
           child: const Text('Yes'),
         ),
       ],
