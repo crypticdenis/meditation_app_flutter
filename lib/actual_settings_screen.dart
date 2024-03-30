@@ -55,6 +55,30 @@ class ActualSettingsScreen extends StatelessWidget {
               ),
             ),
             Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Vibration Enabled', // Change this to your preference
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Switch(
+                    value: settingsProvider.vibrationEnabled, // Assume a vibrationEnabled flag exists in your SettingsProvider
+                    onChanged: (value) {
+                      settingsProvider.setVibrationEnabled(value); // Implement this method in your SettingsProvider
+                    },
+                    activeColor: Colors.black,
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Row(

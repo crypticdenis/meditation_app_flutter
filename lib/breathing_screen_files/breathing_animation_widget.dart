@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
 import 'package:meditation_app_flutter/breathing_screen_files/sinus_painter.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:vibration/vibration.dart';
+
 
 class SinusoidalWaveWidget extends StatefulWidget {
   final TimerOperation? timerOperation;
@@ -20,6 +22,8 @@ class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget>
   late AnimationController _controller;
   late Animation<double> _animation;
   final AudioPlayer audioPlayer = AudioPlayer();
+  bool _isVibrationEnabled = true; // You can change this based on user preference
+
 
   DateTime? lastPlayedTime;
 
@@ -84,7 +88,15 @@ class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget>
   Future<void> _playSound(String filePath) async {
     await audioPlayer.setSource(AssetSource(filePath));
     await audioPlayer.resume();
+
+    if (_isVibrationEnabled) {
+      // Check if the device can vibrate
+      if (await Vibration.hasVibrator() ?? false) {
+        Vibration.vibrate(); // Default vibration
+      }
+    }
   }
+
 
   @override
   void dispose() {

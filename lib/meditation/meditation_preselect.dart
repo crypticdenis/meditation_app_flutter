@@ -125,7 +125,7 @@ class DurationSuggestions extends StatelessWidget {
                         width: 100, // Explicit width for consistency
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black.withOpacity(0.2),
+                            backgroundColor: Colors.white12,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                             ),

@@ -58,7 +58,7 @@ class _BreathingScreenState extends State<BreathingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 50),
+                  padding: const EdgeInsets.only(top: 10),
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: Visibility(

@@ -63,77 +63,48 @@ class _HomeState extends State<Home> {
       future: _initFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          // Your initialization is complete, build your widget here
+          // Initialization is complete
           return Scaffold(
             extendBody: true,
             body: Center(
               child: _widgetOptions.elementAt(_selectedIndex),
             ),
-            bottomNavigationBar: Container(
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 20,
-                    color: Colors.transparent,
-                  ),
-                ],
-              ),
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 15),
-                  child: GNav(
-                    rippleColor: Colors.red,
-                    hoverColor: Colors.red,
-                    gap: 8,
-                    activeColor: Colors.white,
-                    iconSize: 24,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    duration: Duration(milliseconds: 400),
-                    tabBackgroundColor: Colors.white12,
-                    color: Colors.white,
-                    tabs: [
-                      GButton(
-                        icon: Icons.home,
-                        text: 'Home',
-                        textColor: Colors.white,
-                      ),
-                      GButton(
-                        icon: Icons.spa,
-                        text: 'Meditation',
-                        textColor: Colors.white,
-                      ),
-                      GButton(
-                        icon: Icons.person,
-                        text: 'Breathing',
-                        textColor: Colors.white,
-                      ),
-                      GButton(
-                        icon: Icons.book,
-                        text: 'Learn',
-                        textColor: Colors.white,
-                      ),
-                      // Add more GButton items here
-                    ],
-                    selectedIndex: _selectedIndex,
-                    onTabChange: (index) {
-                      setState(() {
-                        _selectedIndex = index;
-                      });
-                    },
-                  ),
+            bottomNavigationBar: BottomNavigationBar(
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
                 ),
-              ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.spa),
+                  label: 'Meditation',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Breathing',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.book),
+                  label: 'Learn',
+                ),
+                // Add more items if needed
+              ],
+              currentIndex: _selectedIndex,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white30,
+              backgroundColor: Colors.transparent, // Adjust as needed
+              type: BottomNavigationBarType.fixed, // Adjust if you have more than 3 items
+              onTap: _onItemTapped,
             ),
           );
         } else {
           // Initialization in progress
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         }
       },
     );
   }
+
 }
 
 class HomeScreen extends StatelessWidget {
