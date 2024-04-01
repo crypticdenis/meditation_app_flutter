@@ -44,7 +44,7 @@ class WeekRatingWidget extends StatelessWidget {
           BarChartRodData(
             toY: entryValue.toDouble(), // Directly using the rating value as the height
             color: getColorBasedOnValue(entryValue.toDouble()),
-            width: 22,
+            width: 15,
           ),
         ],
       );
@@ -57,7 +57,7 @@ class WeekRatingWidget extends StatelessWidget {
         color: Colors.white12,
       ),
       margin: const EdgeInsets.all(8),
-      padding: const EdgeInsets.only(right: 18.0, left: 12.0, top: 24, bottom: 12),
+      padding: const EdgeInsets.only(right: 18.0, left: 12.0, top: 40, bottom: 12),
       child: BarChart(
         BarChartData(
           maxY: 5,

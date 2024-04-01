@@ -11,6 +11,10 @@ enum TimerDisplayMode {
   both,
 }
 
+enum SelectedPeriod { week, month, year }
+
+
+
 Future<bool> showCancelConfirmationDialog(BuildContext context) async {
   final result = await showDialog<bool>(
     context: context,

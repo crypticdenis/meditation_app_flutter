@@ -1,180 +1,194 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:meditation_app_flutter/meditation/meditation.dart'; // Adjust the import path based on your project structure
+import 'package:meditation_app_flutter/meditation/meditation.dart';
 import 'package:meditation_app_flutter/providers/meditation_time_provider.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
 import 'package:meditation_app_flutter/actual_settings_screen.dart';
 import 'package:meditation_app_flutter/background_sounds_feature/sound_settings.dart';
+import 'package:meditation_app_flutter/breathing_screen_files/breathing.dart';
+// import 'package:meditation_app_flutter/common_definitions.dart';
 
 class DurationSuggestions extends StatelessWidget {
-  final List<int> suggestedDurations = [
-    5,
-    10,
-    20,
-  ]; // Example durations in minutes
+  final List<int> suggestedDurations = [5, 10, 20];
 
   DurationSuggestions({Key? key}) : super(key: key);
+
+  Widget _buildIconButton(
+      BuildContext context, IconData iconData, Widget destination) {
+    return IconButton(
+      icon: Icon(iconData, color: Colors.white),
+      onPressed: () => Navigator.push(
+          context, MaterialPageRoute(builder: (context) => destination)),
+    );
+  }
+
+  Widget _buildDurationButton(BuildContext context, int? duration,
+      {required Widget destination}) {
+    final buttonText = duration != null ? '$duration min' : '+';
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      child: Container(
+        width: 100,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white12,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0)),
+            padding: EdgeInsets.symmetric(vertical: 16.0),
+          ),
+          onPressed: () {
+            // Check if the duration is not null
+            if (duration != null) {
+              // Use Provider to update the selectedMinute
+              Provider.of<MeditationTimeProvider>(context, listen: false).selectedMinute = duration;
+            }
+            // Then navigate to the destination screen
+            Navigator.push(context, MaterialPageRoute(builder: (context) => destination));
+          },
+          child: Text(buttonText,
+              style: TextStyle(fontSize: 20, color: Colors.white)),
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildSectionHeader(String title) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Padding(
+        padding: EdgeInsets.only(top: 15, left: 15, bottom: 15),
+        child: Text(title,
+            style: TextStyle(
+                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+      ),
+    );
+  }
+
+  Widget _buildDurationsRow(BuildContext context,
+      {required bool isMeditation}) {
+    final Widget destinationScreen =
+        isMeditation ? MeditationScreen() : BreathingScreen();
+    return SizedBox(
+      height: 80,
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: suggestedDurations.length + 1, // Including the "+" button
+        itemBuilder: (context, index) {
+          return index < suggestedDurations.length
+              ? _buildDurationButton(context, suggestedDurations[index],
+                  destination: destinationScreen)
+              : _buildDurationButton(context, null,
+                  destination: destinationScreen);
+        },
+      ),
+    );
+  }
+
+  final List<Map<String, String>> sessionAssets = [
+    {'image': 'assets/images/nature1.png', 'title': 'Relaxation'},
+    {'image': 'assets/images/nature2.png', 'title': 'Deep Sleep'},
+    {'image': 'assets/images/nature3.png', 'title': 'Anxiety Relief'},
+    // Add more maps for more images and titles as needed
+  ];
+
+  Widget _buildImageInfoRow() {
+    return SizedBox(
+      height: 200, // Adjust the height to account for 80/20 distribution
+      child: ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: sessionAssets.length,
+        itemBuilder: (context, index) {
+          final session = sessionAssets[index];
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: GestureDetector(
+              onTap: () {
+                // Implement navigation or action on tap
+              },
+              child: Container(
+                width: 150, // Set a fixed width for the container
+                decoration: BoxDecoration(
+                  color: Colors.white12,
+                  borderRadius: BorderRadius.circular(24.0), // Rounded corners
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 4, // 80% of the space for the image
+                      child: ClipRRect(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(24.0)),
+                        child:
+                            Image.asset(session['image']!, fit: BoxFit.cover),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1, // 20% of the space for the title
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.white12,
+                        child: Center(
+                          child: Text(
+                            session['title']!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final meditationTimeProvider = Provider.of<MeditationTimeProvider>(context);
-
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: themeProvider.currentGradient,
-        ),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 50, right: 15, bottom: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          icon:
-                              const Icon(Icons.music_note, color: Colors.white),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const SoundSelectionScreen(),
-                              ),
-                            );
-                          },
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: BoxDecoration(gradient: themeProvider.currentGradient),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 50.0),
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            _buildIconButton(context, Icons.music_note,
+                                SoundSelectionScreen()),
+                            _buildIconButton(
+                                context, Icons.settings, ActualSettingsScreen()),
+                          ],
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.settings, color: Colors.white),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const ActualSettingsScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                      ),
+                      _buildSectionHeader('Meditation Timer'),
+                    ],
                   ),
-                ),
-                const Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 60, left: 15, bottom: 15),
-                    child: Text(
-                      'Meditation Timer',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 80,
-              // Adjust the height to fit your design for the scrollable list
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: suggestedDurations.length + 1,
-                // +1 for the "+" button
-                itemBuilder: (BuildContext context, int index) {
-                  if (index == suggestedDurations.length) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Container(
-                        width: 100, // Match the width of other buttons
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withOpacity(0.5),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ),
-                          ),
-                          onPressed: () {
-                            // Navigate to the TimeSelectionScreen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const MeditationScreen(),
-                              ),
-                            );
-                          },
-                          child: Icon(Icons.add,
-                              color: Colors
-                                  .black), // "+" icon, adjust color as necessary
-                        ),
-                      ),
-                    );
-                  } else {
-                    // Regular duration button
-                    int duration = suggestedDurations[index];
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Container(
-                        width: 100, // Explicit width for consistency
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white12,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                vertical:
-                                    16.0), // Maintain vertical padding for height
-                          ),
-                          onPressed: () {
-                            Provider.of<MeditationTimeProvider>(context,
-                                    listen: false)
-                                .selectedMinute = duration;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const MeditationScreen(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            '$duration min',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors
-                                    .white), // Adjust text size and color as necessary
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                },
+                  _buildDurationsRow(context, isMeditation: true),
+                  _buildSectionHeader('Guided Meditation'),
+                  _buildImageInfoRow(),
+                  _buildSectionHeader('Breathing Timer'),
+                  _buildDurationsRow(context, isMeditation: false),
+                  _buildSectionHeader('Guided Breathing'),
+                  _buildImageInfoRow(),
+                  SizedBox( height: 200),
+                ],
               ),
-            ),
-            const SizedBox(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 15, left: 15, bottom: 10),
-                  child: Text(
-                    'Guided Sessions',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

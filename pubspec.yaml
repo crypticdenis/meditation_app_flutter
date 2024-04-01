@@ -81,6 +81,7 @@ flutter:
     - assets/icons/cross.png
     - assets/gongs/
     - assets/sounds/
+    - assets/images/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

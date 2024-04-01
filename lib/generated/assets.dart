@@ -2,6 +2,7 @@
 class Assets {
   Assets._();
 
+  static const String assetsIconsCross = 'assets/icons/cross.png';
   static const String assetsIconsPause = 'assets/icons/pause.png';
   static const String assetsIconsPlay = 'assets/icons/play.png';
   static const String gongsBong = 'assets/gongs/bong.mp3';
@@ -15,6 +16,8 @@ class Assets {
   static const String iconsCross = 'assets/icons/cross.png';
   static const String iconsPause = 'assets/icons/pause.png';
   static const String iconsPlay = 'assets/icons/play.png';
+  static const String imagesNature1 = 'assets/images/nature1.png';
+  static const String imagesNature2 = 'assets/images/nature2.png';
   static const String soundsOceanWaves = 'assets/sounds/ocean_waves.mp3';
   static const String soundsRainyDay = 'assets/sounds/rainy_day.mp3';
   static const String soundsSerenity = 'assets/sounds/serenity.mp3';

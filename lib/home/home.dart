@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meditation_app_flutter/breathing_screen_files/breathing.dart';
+import 'package:meditation_app_flutter/analytics/analytics_home.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
 import 'package:meditation_app_flutter/providers/streak_provider.dart';
 import 'package:meditation_app_flutter/actual_settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/meditation/meditation_preselect.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:meditation_app_flutter/appearance/color_settings.dart';
 import 'package:meditation_app_flutter/background_sounds_feature/sound_settings.dart';
 import 'package:meditation_app_flutter/breathing_screen_files/breathing_preselect.dart';
@@ -14,7 +12,9 @@ import 'package:meditation_app_flutter/home/week_rating_widget.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:meditation_app_flutter/providers/sound_provider.dart';
 import 'package:meditation_app_flutter/providers/ratings_provider.dart';
-import 'package:meditation_app_flutter/meditation/monthly_ratings.dart';
+import 'monthly_ratings.dart';
+import 'package:meditation_app_flutter/common_definitions.dart';
+import 'yearly_rating.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -28,7 +28,6 @@ class _HomeState extends State<Home> {
   late Future<void> _initFuture;
   late StreakProvider _streakProvider;
   late RatingsProvider _ratingsProvider;
-
 
   @override
   void initState() {
@@ -44,11 +43,10 @@ class _HomeState extends State<Home> {
   }
 
   final List<Widget> _widgetOptions = [
-    HomeScreen(), // This is the actual home screen with the streak
-    DurationSuggestions(), // Placeholder for the meditation screen
-    BreathingPreselect(), // Placeholder for the breathing screen
-    SettingsScreen(), // Placeholder for the settings screen
-    // Add more screens here if necessary
+    HomeScreen(),
+    DurationSuggestions(),
+    SettingsScreen(),
+    AnalyticsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -80,20 +78,21 @@ class _HomeState extends State<Home> {
                   label: 'Meditation',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Breathing',
-                ),
-                BottomNavigationBarItem(
                   icon: Icon(Icons.book),
                   label: 'Learn',
                 ),
-                // Add more items if needed
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.analytics),
+                  label: 'Analytics',
+                ),
               ],
               currentIndex: _selectedIndex,
               selectedItemColor: Colors.white,
               unselectedItemColor: Colors.white30,
-              backgroundColor: Colors.transparent, // Adjust as needed
-              type: BottomNavigationBarType.fixed, // Adjust if you have more than 3 items
+              backgroundColor: Colors.transparent,
+              // Adjust as needed
+              type: BottomNavigationBarType.fixed,
+              // Adjust if you have more than 3 items
               onTap: _onItemTapped,
             ),
           );
@@ -104,19 +103,23 @@ class _HomeState extends State<Home> {
       },
     );
   }
-
 }
 
-class HomeScreen extends StatelessWidget {
-
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  SelectedPeriod _selectedPeriod = SelectedPeriod.week;
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final streakProvider = Provider.of<StreakProvider>(context);
     final currentStreak = streakProvider.streak;
-
 
     return Scaffold(
       body: Container(
@@ -197,9 +200,9 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only( top: 15.0),
+              padding: EdgeInsets.only(top: 15.0),
               child: Text(
-                'Weekly Ratings',
+                'Ratings',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -208,25 +211,53 @@ class HomeScreen extends StatelessWidget {
                 textAlign: TextAlign.left,
               ),
             ),
-            Align(
-              alignment: Alignment.center, // Customize alignment as needed
-              child: WeekRatingWidget(),
-            ),
-            const Padding(
-              padding: EdgeInsets.only( top: 15.0),
-              child: Text(
-                'Monthly Ratings',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+            ToggleButtons(
+              borderColor: Colors.transparent,
+              borderWidth: 2,
+              selectedBorderColor: Colors.transparent,
+              selectedColor: Colors.white,
+              color: Colors.white30,
+              fillColor: Colors.white12,
+              borderRadius: BorderRadius.circular(8),
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('W'),
                 ),
-                textAlign: TextAlign.left,
-              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('M'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('Y'),
+                ),
+              ],
+              onPressed: (int index) {
+                setState(() {
+                  if (index == 0) {
+                    _selectedPeriod = SelectedPeriod.week;
+                  } else if (index == 1) {
+                    _selectedPeriod = SelectedPeriod.month;
+                  } else {
+                    _selectedPeriod = SelectedPeriod.year;
+                  }
+                });
+              },
+              isSelected: [
+                _selectedPeriod == SelectedPeriod.week,
+                _selectedPeriod == SelectedPeriod.month,
+                _selectedPeriod == SelectedPeriod.year,
+              ],
             ),
-            Align(
-              alignment: Alignment.center, // Customize alignment as needed
-              child: MonthRatingWidget(),
+
+            // Fixed conditional rendering
+            SizedBox(
+              child: _selectedPeriod == SelectedPeriod.week
+                  ? WeekRatingWidget()
+                  : (_selectedPeriod == SelectedPeriod.month
+                      ? MonthRatingWidget()
+                      : YearRatingWidget()),
             ),
           ],
         ),
