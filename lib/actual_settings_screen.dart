@@ -4,6 +4,7 @@ import 'package:meditation_app_flutter/providers/theme_provider.dart';
 import 'package:meditation_app_flutter/custom_app_bar.dart';
 import 'package:meditation_app_flutter/providers/settings_provider.dart';
 import 'package:meditation_app_flutter/providers/sound_provider.dart';
+import 'appearance/color_settings.dart';
 
 class ActualSettingsScreen extends StatelessWidget {
   const ActualSettingsScreen({Key? key}) : super(key: key);
@@ -55,7 +56,8 @@ class ActualSettingsScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -67,9 +69,11 @@ class ActualSettingsScreen extends StatelessWidget {
                     ),
                   ),
                   Switch(
-                    value: settingsProvider.vibrationEnabled, // Assume a vibrationEnabled flag exists in your SettingsProvider
+                    value: settingsProvider.vibrationEnabled,
+                    // Assume a vibrationEnabled flag exists in your SettingsProvider
                     onChanged: (value) {
-                      settingsProvider.setVibrationEnabled(value); // Implement this method in your SettingsProvider
+                      settingsProvider.setVibrationEnabled(
+                          value); // Implement this method in your SettingsProvider
                     },
                     activeColor: Colors.black,
                     inactiveThumbColor: Colors.white,
@@ -124,6 +128,35 @@ class ActualSettingsScreen extends StatelessWidget {
                     activeColor: Colors.black,
                     inactiveThumbColor: Colors.white,
                     inactiveTrackColor: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Color Settings',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      // Navigate to the new menu screen
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            SettingsScreen(), // Replace with your actual new menu screen widget
+                      ));
+                    },
                   ),
                 ],
               ),

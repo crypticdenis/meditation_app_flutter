@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
+import 'package:meditation_app_flutter/common_definitions.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/ratings_provider.dart';
 
@@ -10,23 +11,10 @@ class MonthRatingWidget extends StatelessWidget {
 
   final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
 
-  Color getColorBasedOnValue(double value) {
-    List<Color> colorGradient = [
-      Colors.red, // 1
-      Colors.deepOrange, // 2
-      Colors.orangeAccent, // 3
-      Colors.lightGreen, // 4
-      Colors.green // 5
-    ];
-    int index =
-        (value.clamp(1, 5)).round() - 1; // Adjusted to use 0-based index
-    return colorGradient[index];
-  }
-
   @override
   Widget build(BuildContext context) {
-    final Map<String, int> sampleRatings =
-        Provider.of<RatingsProvider>(context).ratings;
+    final ratingsProvider = Provider.of<RatingsProvider>(context);
+    final Map<String, List<int>> sampleRatings = ratingsProvider.ratings;
 
     DateTime now = DateTime.now();
     int daysInMonth = DateUtils.getDaysInMonth(now.year, now.month);
@@ -35,7 +23,12 @@ class MonthRatingWidget extends StatelessWidget {
       // Use the first day of the month and add index to get the current day
       final date = DateTime(now.year, now.month, index + 1);
       final dateString = dateFormat.format(date);
-      final entryValue = sampleRatings[dateString] ?? 0;
+
+      // Get the list of ratings for the current day and calculate the average
+      final List<int> dailyRatings = sampleRatings[dateString] ?? [];
+      final double averageRating = dailyRatings.isNotEmpty
+          ? dailyRatings.reduce((a, b) => a + b) / dailyRatings.length
+          : 0;
 
       // Calculate the width of the bar based on the number of days in the month
       double barWidth = MediaQuery.of(context).size.width / (daysInMonth * 2);
@@ -44,16 +37,15 @@ class MonthRatingWidget extends StatelessWidget {
         x: index,
         barRods: [
           BarChartRodData(
-            toY: entryValue.toDouble(),
-            color: getColorBasedOnValue(entryValue.toDouble()),
+            toY: roundToNearestHalf(averageRating),
+            color: getColorBasedOnAverageValue(averageRating),
             width: barWidth,
           ),
         ],
       );
     });
 
-    final String monthName =
-        DateFormat('MMMM').format(now); // e.g., March 2024
+    final String monthName = DateFormat('MMMM').format(now); // e.g., March 2024
 
     return Container(
       height: 220,

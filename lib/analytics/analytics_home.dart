@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
-import 'package:meditation_app_flutter/home/monthly_ratings.dart';
-import 'package:meditation_app_flutter/home/yearly_rating.dart';
-import 'package:meditation_app_flutter/home/week_rating_widget.dart';
+import 'package:meditation_app_flutter/analytics/monthly_ratings.dart';
+import 'package:meditation_app_flutter/analytics/yearly_rating.dart';
+import 'package:meditation_app_flutter/analytics/week_rating_widget.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -36,12 +36,12 @@ class AnalyticsScreenState extends State<AnalyticsScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.only(top: 55.0),
+              padding: EdgeInsets.only(top: 55, bottom: 15),
               child: Text(
                 'Ratings',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.left,

@@ -39,34 +39,36 @@ class YearRatingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, int> sampleRatings =
-        Provider.of<RatingsProvider>(context).ratings;
+    final ratingsProvider = Provider.of<RatingsProvider>(context);
+    final Map<String, List<int>> sampleRatings = ratingsProvider.ratings;
 
+    // Generate the bar groups for each month
     final List<BarChartGroupData> barGroups = List.generate(12, (monthIndex) {
       double totalRatings = 0;
-      int ratingDaysCount = 0;
+      int ratingEntriesCount = 0;
 
       DateTime monthStart = DateTime(DateTime.now().year, monthIndex + 1, 1);
       int daysInMonth =
           DateUtils.getDaysInMonth(monthStart.year, monthStart.month);
 
+      // Iterate through each day of the month to calculate the average rating
       for (int day = 1; day <= daysInMonth; day++) {
         final dateString =
             dateFormat.format(DateTime(monthStart.year, monthStart.month, day));
+
+        // If there are ratings for this day, add them to the total and increment count
         if (sampleRatings.containsKey(dateString)) {
-          totalRatings += sampleRatings[dateString]!;
-          ratingDaysCount++;
+          totalRatings += sampleRatings[dateString]!.reduce((a, b) => a + b);
+          ratingEntriesCount += sampleRatings[dateString]!.length;
         }
       }
 
+      // Calculate the average rating for the month
       double averageRating =
-          ratingDaysCount > 0 ? totalRatings / ratingDaysCount : 0;
-      // Round the average rating to the nearest 0.5 increment
+          ratingEntriesCount > 0 ? totalRatings / ratingEntriesCount : 0;
       averageRating = roundToNearestHalf(averageRating);
 
-      print('averageRating');
-      print(averageRating);
-
+      // Create a bar group for this month
       return BarChartGroupData(
         x: monthIndex,
         barRods: [

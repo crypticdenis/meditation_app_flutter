@@ -129,6 +129,8 @@ class _TimerWidgetState extends State<TimerWidget> {
         .difference(DateTime(lastReset.year, lastReset.month, lastReset.day))
         .inDays;
 
+    print(streakProvider.streak);
+
     // Assuming streak == 0 indicates the user hasn't started a streak yet or it was reset
     if (differenceInDays == 0 && streakProvider.streak > 0) {
       // User already interacted today, so don't change the streak.
@@ -139,7 +141,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     } else if (streakProvider.streak == 0) {
       streakProvider.incrementStreak(); // Start streak
     }
-
+  print(streakProvider.streak);
     // Show dialog to rate meditation
     await showDialog(
         context: context,

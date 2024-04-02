@@ -29,7 +29,7 @@ class DurationSuggestions extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
-        width: 100,
+        width: 105,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white12,
@@ -88,15 +88,14 @@ class DurationSuggestions extends StatelessWidget {
   }
 
   final List<Map<String, String>> sessionAssets = [
-    {'image': 'assets/images/nature1.png', 'title': 'Relaxation'},
-    {'image': 'assets/images/nature2.png', 'title': 'Deep Sleep'},
-    {'image': 'assets/images/nature3.png', 'title': 'Anxiety Relief'},
-    // Add more maps for more images and titles as needed
+    {'image': 'assets/images/nature1.png', 'title': 'Relaxation', 'duration': '6 min'},
+    {'image': 'assets/images/nature2.png', 'title': 'Deep Sleep', 'duration': '9 min'},
+    {'image': 'assets/images/nature3.png', 'title': 'Anxiety Relief', 'duration': '5 min'},
   ];
 
   Widget _buildImageInfoRow() {
     return SizedBox(
-      height: 200,
+      height: 180,
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
@@ -107,38 +106,55 @@ class DurationSuggestions extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: GestureDetector(
               onTap: () {
+                // Handle your onTap action here
               },
               child: Container(
-                width: 150, // Set a fixed width for the container
+                width: 240, // Set a fixed width for the container
                 decoration: BoxDecoration(
                   color: Colors.white12,
-                  borderRadius: BorderRadius.circular(25), // Rounded corners
+                  borderRadius: BorderRadius.circular(15), // Rounded corners
                 ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: 4, // 80% of the space for the image
-                      child: ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(25),
-                        child:
-                            Image.asset(session['image']!, fit: BoxFit.cover),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Stack(
+                    fit: StackFit.expand, // Make the stack fill the container
+                    children: [
+                      Image.asset(
+                        session['image']!,
+                        fit: BoxFit.cover, // This ensures the image covers the whole area of the container
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        width: double.infinity,
-                        child: Center(
-                          child: Text(
-                            session['title']!,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.5), // Semi-transparent black
+                            ],
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        left: 8,
+                        bottom: 30, // Adjust the position as needed
+                        child: Text(
+                          session['title']!,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                      Positioned(
+                        left: 8,
+                        bottom: 8, // Adjust the position so it's just below the title
+                        child: Text(
+                          "${session['duration']} min", // Assuming 'duration' is a key in your session map
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -147,6 +163,9 @@ class DurationSuggestions extends StatelessWidget {
       ),
     );
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {

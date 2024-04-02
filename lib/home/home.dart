@@ -8,13 +8,13 @@ import 'package:meditation_app_flutter/meditation/meditation_preselect.dart';
 import 'package:meditation_app_flutter/appearance/color_settings.dart';
 import 'package:meditation_app_flutter/background_sounds_feature/sound_settings.dart';
 import 'package:meditation_app_flutter/breathing_screen_files/breathing_preselect.dart';
-import 'package:meditation_app_flutter/home/week_rating_widget.dart';
+import 'package:meditation_app_flutter/analytics/week_rating_widget.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:meditation_app_flutter/providers/sound_provider.dart';
 import 'package:meditation_app_flutter/providers/ratings_provider.dart';
-import 'monthly_ratings.dart';
+import '../analytics/monthly_ratings.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
-import 'yearly_rating.dart';
+import '../analytics/yearly_rating.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -28,10 +28,12 @@ class _HomeState extends State<Home> {
   late Future<void> _initFuture;
   late StreakProvider _streakProvider;
   late RatingsProvider _ratingsProvider;
+  late ThemeProvider _themeProvider;
 
   @override
   void initState() {
     super.initState();
+    _themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     _ratingsProvider = Provider.of<RatingsProvider>(context, listen: false);
     _initFuture = _ratingsProvider.init();
     _streakProvider = Provider.of<StreakProvider>(context, listen: false);
@@ -45,7 +47,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _widgetOptions = [
     HomeScreen(),
     DurationSuggestions(),
-    SettingsScreen(),
+    AnalyticsScreen(),
     AnalyticsScreen(),
   ];
 
@@ -89,10 +91,9 @@ class _HomeState extends State<Home> {
               currentIndex: _selectedIndex,
               selectedItemColor: Colors.white,
               unselectedItemColor: Colors.white30,
-              backgroundColor: Colors.transparent,
-              // Adjust as needed
+              backgroundColor: Colors.black12,
               type: BottomNavigationBarType.fixed,
-              // Adjust if you have more than 3 items
+              elevation: 0,
               onTap: _onItemTapped,
             ),
           );
@@ -121,11 +122,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final streakProvider = Provider.of<StreakProvider>(context);
     final currentStreak = streakProvider.streak;
 
+    print(streakProvider.streak);
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient:
-              themeProvider.currentGradient, // Ensure themeProvider is defined
+              themeProvider.currentGradient,
+
         ),
         child: Column(
           children: [
