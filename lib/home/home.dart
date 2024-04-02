@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 50, right: 16),
+                    padding: const EdgeInsets.only(top: 50, right: 15),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -185,13 +185,13 @@ class _HomeScreenState extends State<HomeScreen> {
               margin: const EdgeInsets.all(15.0),
               decoration: BoxDecoration(
                 color: Colors.white12,
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(20.0),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: Text("Current Streak: $currentStreak",
                         style:
                             const TextStyle(color: Colors.white, fontSize: 24)),
@@ -218,18 +218,18 @@ class _HomeScreenState extends State<HomeScreen> {
               selectedColor: Colors.white,
               color: Colors.white30,
               fillColor: Colors.white12,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(20),
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text('W'),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text('M'),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text('Y'),
                 ),
               ],

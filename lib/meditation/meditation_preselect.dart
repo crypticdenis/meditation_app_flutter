@@ -38,11 +38,10 @@ class DurationSuggestions extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 16.0),
           ),
           onPressed: () {
-            // Check if the duration is not null
-            if (duration != null) {
-              // Use Provider to update the selectedMinute
-              Provider.of<MeditationTimeProvider>(context, listen: false).selectedMinute = duration;
-            }
+            // Update the selectedMinute with duration if not null, otherwise set to 0
+            final selectedMinute = duration ?? 0; // Set to 0 if duration is null (i.e., '+' button pressed)
+            Provider.of<MeditationTimeProvider>(context, listen: false).selectedMinute = selectedMinute;
+
             // Then navigate to the destination screen
             Navigator.push(context, MaterialPageRoute(builder: (context) => destination));
           },
@@ -52,6 +51,7 @@ class DurationSuggestions extends StatelessWidget {
       ),
     );
   }
+
 
 
   Widget _buildSectionHeader(String title) {
@@ -96,7 +96,7 @@ class DurationSuggestions extends StatelessWidget {
 
   Widget _buildImageInfoRow() {
     return SizedBox(
-      height: 200, // Adjust the height to account for 80/20 distribution
+      height: 200,
       child: ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
@@ -107,13 +107,12 @@ class DurationSuggestions extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: GestureDetector(
               onTap: () {
-                // Implement navigation or action on tap
               },
               child: Container(
                 width: 150, // Set a fixed width for the container
                 decoration: BoxDecoration(
                   color: Colors.white12,
-                  borderRadius: BorderRadius.circular(24.0), // Rounded corners
+                  borderRadius: BorderRadius.circular(25), // Rounded corners
                 ),
                 child: Column(
                   children: [
@@ -121,16 +120,15 @@ class DurationSuggestions extends StatelessWidget {
                       flex: 4, // 80% of the space for the image
                       child: ClipRRect(
                         borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(24.0)),
+                            BorderRadius.circular(25),
                         child:
                             Image.asset(session['image']!, fit: BoxFit.cover),
                       ),
                     ),
                     Expanded(
-                      flex: 1, // 20% of the space for the title
+                      flex: 1,
                       child: Container(
                         width: double.infinity,
-                        color: Colors.white12,
                         child: Center(
                           child: Text(
                             session['title']!,

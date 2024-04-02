@@ -1,23 +1,28 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import '../providers/sound_provider.dart';
 import '../custom_time_wheel.dart';
 import 'sounds.dart';
 import '../custom_app_bar.dart';
 import '../providers/theme_provider.dart';
+import '../providers/gong_provider.dart';
+import 'package:meditation_app_flutter/gong_feature/gongs.dart';
 
 class SoundSelectionScreen extends StatelessWidget {
   const SoundSelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final gongProvider = Provider.of<GongProvider>(context);
     final soundProvider = Provider.of<BackgroundSoundProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: CustomAppBar(
-        title: 'My Screen',
+        title: '',
         showSettingsButton: false,
         showSoundSettingsButton: false,
       ),
@@ -29,39 +34,77 @@ class SoundSelectionScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 100),
             Padding(
-              padding:
-              const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Stack(
+                alignment: Alignment.center, // Ensures the text is centered
                 children: [
-                  const Text(
-                    'Soundscape enabled',
+                  Text(
+                    'Soundscapes',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 25,
                     ),
                   ),
-                  Switch(
-                    value: soundProvider.soundEnabled,
-                    onChanged: (bool value) {
-                      soundProvider.toggleSoundEnabled();
-                    },
-                    activeColor: Colors.black,
-                    inactiveThumbColor: Colors.white,
-                    inactiveTrackColor: Colors.grey,
+                  Align(
+                    alignment: Alignment.centerRight, // Aligns the switch to the right
+                    child: Switch(
+                      value: soundProvider.soundEnabled,
+                      onChanged: (bool value) {
+                        soundProvider.toggleSoundEnabled();
+                      },
+                      activeColor: Colors.black,
+                      inactiveThumbColor: Colors.white,
+                      inactiveTrackColor: Colors.grey,
+                    ),
                   ),
                 ],
               ),
             ),
+
             Expanded(
               child: Center(
-                child: CustomTimeWheel(
-                  itemCount: BackgroundsSounds.names.length,
-                  selectedValue: soundProvider.currentSoundIndex,
-                  onSelectedItemChanged: (index) =>
-                      soundProvider.setSound(index),
-                  mode: WheelMode.sounds,
-                  colorNames: BackgroundsSounds.names,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white12,
+                    borderRadius: BorderRadius.circular(20), // Rounded edges
+                  ),
+                  margin:
+                      const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                  child: CustomTimeWheel(
+                    itemCount: BackgroundsSounds.names.length,
+                    selectedValue: soundProvider.currentSoundIndex,
+                    onSelectedItemChanged: (index) =>
+                        soundProvider.setSound(index),
+                    mode: WheelMode.sounds,
+                    colorNames: BackgroundsSounds.names,
+                  ),
+                ),
+              ),
+            ),
+            const Text(
+              'Gongs',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white12,
+                    borderRadius: BorderRadius.circular(20), // Rounded edges
+                  ),
+                  margin:
+                      const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                  child: CustomTimeWheel(
+                    itemCount: GongSounds.names.length,
+                    selectedValue: gongProvider.currentGongIndex,
+                    onSelectedItemChanged: (index) =>
+                        gongProvider.setGong(index),
+                    mode: WheelMode.gongs,
+                    colorNames: GongSounds.names,
+                  ),
                 ),
               ),
             ),

@@ -58,10 +58,10 @@ class MonthRatingWidget extends StatelessWidget {
     return Container(
       height: 220,
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(18)),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
         color: Colors.white12,
       ),
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(15),
       child: Stack(
         children: [
           Positioned(

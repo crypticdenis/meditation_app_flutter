@@ -53,10 +53,10 @@ class WeekRatingWidget extends StatelessWidget {
     return Container(
       height: 220,
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(18)),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
         color: Colors.white12,
       ),
-      margin: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(15),
       padding: const EdgeInsets.only(right: 18.0, left: 12.0, top: 40, bottom: 12),
       child: BarChart(
         BarChartData(
