@@ -34,7 +34,7 @@ class TimerState extends State<TimePicker> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: 80,
+            width: 130,
             height: 250,
             child: CustomTimeWheel(
               itemCount: 241,

@@ -10,6 +10,8 @@ import 'package:meditation_app_flutter/timer_feature/timer_and_picker_logic.dart
 import 'package:meditation_app_flutter/background_sounds_feature/sound_settings.dart';
 import 'package:meditation_app_flutter/actual_settings_screen.dart';
 import 'meditation_preselect.dart';
+import 'meditation_session.dart';
+import 'meditation_session_controller.dart';
 
 class MeditationScreen extends StatefulWidget {
   const MeditationScreen({super.key});
@@ -86,10 +88,24 @@ class _MeditationScreenState extends State<MeditationScreen> {
               left: 0,
               right: 0,
               child: InkWell(
-                onTap: () => timerLogic.toggleTimerOperation(_timerOperation),
+                onTap: () {
+                  // Toggle the timer operation, which would start the timer.
+                  timerLogic.toggleTimerOperation(_timerOperation);
+
+                  // Check if we're starting the timer and not pausing or stopping it.
+                  if (_timerOperation == TimerOperation.start) {
+                    // Create a new meditation session object with the selected time and type.
+                    final newSession = MeditationSession(
+                      duration: meditationTimeProvider.selectedMinute,
+                      isBreathingExercise: false, // Set this accordingly if you have the data.
+                    );
+
+                    // Save the session using the session manager.
+                    MeditationSessionManager().saveSession(newSession);
+                  }
+                },
                 child: Image.asset(
-                  _timerOperation == TimerOperation.pause ||
-                          _timerOperation == TimerOperation.reset
+                  _timerOperation == TimerOperation.pause || _timerOperation == TimerOperation.reset
                       ? 'assets/icons/play.png'
                       : 'assets/icons/pause.png',
                   width: 50,
@@ -97,6 +113,7 @@ class _MeditationScreenState extends State<MeditationScreen> {
                 ),
               ),
             ),
+
             Align(
               alignment: Alignment.topRight,
               child: Padding(
@@ -138,7 +155,6 @@ class _MeditationScreenState extends State<MeditationScreen> {
                   icon: Icon(Icons.close),
                   color: Colors.red, // Close icon
                   onPressed: () {
-                    // Show confirmation dialog
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -161,10 +177,7 @@ class _MeditationScreenState extends State<MeditationScreen> {
                                     MaterialStateProperty.all(Colors.red),
                               ),
                               onPressed: () {
-                                // Perform your logic here, e.g., cancel the timer
-                                // Assuming `timerLogic.cancelTimer()` is your method to cancel the timer
                                 timerLogic.cancelTimer();
-                                // Then pop the current screen off the navigation stack
                                 Navigator.of(context).pop(); // Close the dialog
                                 Navigator.of(context).pop(); // Navigate back
                               },

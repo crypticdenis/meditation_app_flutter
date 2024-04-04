@@ -10,7 +10,7 @@ class RateMeditationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final gradient = themeProvider.currentGradient;
-    final MeditationSessionController controller = MeditationSessionController(); // Instance of the controller
+    final MeditationSessionManager controller = MeditationSessionManager(); // Instance of the controller
 
 
     return AlertDialog(
