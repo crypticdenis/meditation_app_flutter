@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'meditation_session_controller.dart';
+import '../meditation/meditation_session_controller.dart';
 
 class RateMeditationDialog extends StatelessWidget {
   const RateMeditationDialog({super.key});

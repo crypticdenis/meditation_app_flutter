@@ -82,6 +82,7 @@ flutter:
     - assets/gongs/
     - assets/sounds/
     - assets/images/
+    - assets/quotes.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
-import 'package:meditation_app_flutter/breathing_screen_files/sinus_painter.dart';
+import 'package:meditation_app_flutter/meditation/breathing/sinus_painter.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vibration/vibration.dart';
 
@@ -9,9 +9,16 @@ import 'package:vibration/vibration.dart';
 class SinusoidalWaveWidget extends StatefulWidget {
   final TimerOperation? timerOperation;
   final Function(TimerOperation)? onTimerOperationChanged;
+  final int inhaleDuration; // Duration in seconds
+  final int exhaleDuration; // Duration in seconds
 
-  const SinusoidalWaveWidget(
-      {super.key, this.timerOperation, this.onTimerOperationChanged});
+  const SinusoidalWaveWidget({
+    super.key,
+    this.timerOperation,
+    this.onTimerOperationChanged,
+    required this.inhaleDuration,
+    required this.exhaleDuration,
+  });
 
   @override
   _SinusoidalWaveWidgetState createState() => _SinusoidalWaveWidgetState();
@@ -30,18 +37,20 @@ class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget>
   @override
   void initState() {
     super.initState();
+    // The total duration is the sum of inhale and exhale durations
+    int totalDuration = widget.inhaleDuration + widget.exhaleDuration;
     _controller = AnimationController(
-      duration: const Duration(seconds: 10),
+      duration: Duration(seconds: totalDuration),
       vsync: this,
     )..repeat();
 
-    _animation =
-        Tween<double>(begin: 0.0, end: 2 * math.pi).animate(_controller)
-          ..addListener(() {
-            setState(() {});
-            _checkPhaseAndPlaySound(_animation.value);
-          });
+    _animation = Tween<double>(begin: 0.0, end: 2 * math.pi).animate(_controller)
+      ..addListener(() {
+        setState(() {});
+        _checkPhaseAndPlaySound(_animation.value);
+      });
   }
+
 
   @override
   void didUpdateWidget(covariant SinusoidalWaveWidget oldWidget) {

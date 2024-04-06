@@ -1,4 +1,17 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:math';
+import 'package:flutter/services.dart' show rootBundle;
+
+Future<Map<String, String>> getRandomQuote() async {
+  final String response = await rootBundle.loadString('assets/quotes.json');
+  final List<dynamic> quotes = await json.decode(response);
+  final randomIndex = Random().nextInt(quotes.length);
+  return {
+    "quote": quotes[randomIndex]['quote'],
+    "author": quotes[randomIndex]['author']
+  };
+}
 
 enum TimerOperation { start, pause, resume, reset }
 
@@ -14,6 +27,41 @@ enum SelectedPeriod { week, month, year }
 double roundToNearestHalf(double value) {
   return (value * 2).roundToDouble() / 2;
 }
+
+
+void showQuitSessionDialog(BuildContext context, VoidCallback onCancel, VoidCallback onConfirm) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Quit Session?'),
+        actions: <Widget>[
+          TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(Colors.black),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              onCancel(); // Call the onCancel callback if provided
+            },
+            child: const Text('No'),
+          ),
+          TextButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(Colors.red),
+            ),
+            onPressed: () {
+              onConfirm(); // Call the onConfirm callback, which contains the logic to execute on confirmation
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
 DateTime getWeekStart(DateTime current) {
   int daysFromMonday = current.weekday - 1;
@@ -67,3 +115,98 @@ Color getColorBasedOnAverageValue(double average) {
     // If dialog is dismissed by tapping outside of it, treat it as 'false'
     return result ?? false;
   }
+
+
+
+  //From Meditation Guided Sessions feature:
+
+Widget buildSectionHeader(String title) {
+  return Align(
+    alignment: Alignment.topLeft,
+    child: Padding(
+      padding: EdgeInsets.only(top: 15, left: 15, bottom: 15),
+      child: Text(title,
+          style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white)),
+    ),
+  );
+}
+
+final List<Map<String, String>> sessionAssets = [
+  {'image': 'assets/images/nature1.png', 'title': 'Relaxation', 'duration': '6 min'},
+  {'image': 'assets/images/nature2.png', 'title': 'Deep Sleep', 'duration': '9 min'},
+  {'image': 'assets/images/nature3.png', 'title': 'Anxiety Relief', 'duration': '5 min'},
+];
+
+Widget _buildImageInfoRow() {
+  return SizedBox(
+    height: 180,
+    child: ListView.builder(
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      itemCount: sessionAssets.length,
+      itemBuilder: (context, index) {
+        final session = sessionAssets[index];
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: GestureDetector(
+            onTap: () {
+              // Handle your onTap action here
+            },
+            child: Container(
+              width: 240, // Set a fixed width for the container
+              decoration: BoxDecoration(
+                color: Colors.white12,
+                borderRadius: BorderRadius.circular(15), // Rounded corners
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Stack(
+                  fit: StackFit.expand, // Make the stack fill the container
+                  children: [
+                    Image.asset(
+                      session['image']!,
+                      fit: BoxFit.cover, // This ensures the image covers the whole area of the container
+                    ),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.5), // Semi-transparent black
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 8,
+                      bottom: 30, // Adjust the position as needed
+                      child: Text(
+                        session['title']!,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                    Positioned(
+                      left: 8,
+                      bottom: 8, // Adjust the position so it's just below the title
+                      child: Text(
+                        "${session['duration']} min", // Assuming 'duration' is a key in your session map
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    ),
+  );
+}

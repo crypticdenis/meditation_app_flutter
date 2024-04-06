@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:meditation_app_flutter/background_sounds/sound_settings.dart';
+import 'package:meditation_app_flutter/gong/gong_settings.dart';
+import 'package:meditation_app_flutter/providers/gong_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
-import 'package:meditation_app_flutter/custom_app_bar.dart';
 import 'package:meditation_app_flutter/providers/settings_provider.dart';
 import 'package:meditation_app_flutter/providers/sound_provider.dart';
 import 'appearance/color_settings.dart';
+import 'common_definitions.dart';
+import 'package:meditation_app_flutter/meditation/breathing/breathing_settings.dart';
 
 class ActualSettingsScreen extends StatelessWidget {
   const ActualSettingsScreen({Key? key}) : super(key: key);
@@ -14,22 +18,19 @@ class ActualSettingsScreen extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final soundProvider = Provider.of<BackgroundSoundProvider>(context);
     final settingsProvider = Provider.of<SettingsProvider>(context);
+    final gongProvider = Provider.of<GongProvider>(context);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: CustomAppBar(
-        title: 'Settings',
-        showSettingsButton: false,
-        showSoundSettingsButton: false,
-      ),
       body: Container(
-        padding: EdgeInsets.only(top: 100),
+        padding: EdgeInsets.only(top: 50),
         decoration: BoxDecoration(
           gradient: themeProvider.currentGradient,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            buildSectionHeader('Settings'),
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -37,7 +38,122 @@ class ActualSettingsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Timer Enabled',
+                    'Set Background',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      // Navigate to the new menu screen
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            SettingsScreen(), // Replace with your actual new menu screen widget
+                      ));
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Set Gong',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      // Navigate to the new menu screen
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            GongSelectionScreen(), // Replace with your actual new menu screen widget
+                      ));
+                    },
+                  ),
+                ],
+              ),
+            ),Padding(
+              padding:
+              const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Set Breathing Rhythm',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      // Navigate to the new menu screen
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            BreathingSettingsScreen(), // Replace with your actual new menu screen widget
+                      ));
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+              const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Set Soundscape',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      // Navigate to the new menu screen
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            SoundSelectionScreen(), // Replace with your actual new menu screen widget
+                      ));
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Timer',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -62,7 +178,7 @@ class ActualSettingsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Vibration Enabled', // Change this to your preference
+                    'Vibration', // Change this to your preference
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -89,7 +205,7 @@ class ActualSettingsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Progress Bar Enabled',
+                    'Progress Bar',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -114,7 +230,7 @@ class ActualSettingsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Soundscape enabled',
+                    'Soundscape',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -139,24 +255,20 @@ class ActualSettingsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Color Settings',
+                    'Gongs',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      // Navigate to the new menu screen
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            SettingsScreen(), // Replace with your actual new menu screen widget
-                      ));
+                  Switch(
+                    value: gongProvider.gongEnabled,
+                    onChanged: (bool value) {
+                      gongProvider.toggleGongEnabled();
                     },
+                    activeColor: Colors.black,
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: Colors.grey,
                   ),
                 ],
               ),

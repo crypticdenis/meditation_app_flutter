@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../common_definitions.dart';
 import 'package:audioplayers/audioplayers.dart';
-import '../gong_feature/gongs.dart';
+import '../gong/gongs.dart';
 import '../providers/gong_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/streak_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../meditation/rate_meditation.dart';
-import 'package:meditation_app_flutter/home/home.dart';
+import '../Niu/rate_meditation.dart';
+import 'package:meditation_app_flutter/home/main_home.dart';
 
 class TimerWidget extends StatefulWidget {
   final int minute;
@@ -100,11 +100,13 @@ class _TimerWidgetState extends State<TimerWidget> {
   void _playGongSound() async {
     print("this _playGongSound is in use ");
     final gongProvider = Provider.of<GongProvider>(context, listen: false);
-    final String gongSoundPath =
-        GongSounds.files[gongProvider.currentGongIndex];
+    if (gongProvider.gongEnabled) {
+      final String gongSoundPath =
+          GongSounds.files[gongProvider.currentGongIndex];
 
-    final player = AudioPlayer();
-    await player.play(AssetSource(gongSoundPath));
+      final player = AudioPlayer();
+      await player.play(AssetSource(gongSoundPath));
+    }
   }
 
   Future<DateTime> getLastIncrementDateFromStorage() async {
@@ -115,11 +117,10 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   void _handleTimerComplete() async {
     print("This _handleTimerComplete is in use");
-
-    // Navigate after all logic is performed and the dialog is dismissed
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Home()), // Assuming Home is defined elsewhere
+      MaterialPageRoute(
+          builder: (context) => Home()), // Assuming Home is defined elsewhere
     );
 
     final streakProvider = Provider.of<StreakProvider>(context, listen: false);
@@ -137,20 +138,13 @@ class _TimerWidgetState extends State<TimerWidget> {
     } else if (differenceInDays == 1) {
       streakProvider.incrementStreak(); // Continue streak
     } else if (differenceInDays > 1) {
-      streakProvider.resetStreak(); // Reset streak if more than a day has passed
+      streakProvider
+          .resetStreak(); // Reset streak if more than a day has passed
     } else if (streakProvider.streak == 0) {
       streakProvider.incrementStreak(); // Start streak
     }
-  print(streakProvider.streak);
-    // Show dialog to rate meditation
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RateMeditationDialog(); // Assuming this is defined elsewhere
-        });
+    print(streakProvider.streak);
   }
-
-
 
   void _pauseTimer() {
     print("this _pauseTimer is in use ");

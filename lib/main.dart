@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home/home.dart';
+import 'package:meditation_app_flutter/providers/breathing_rhythm_provider.dart';
+import 'home/main_home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'providers/theme_provider.dart';
@@ -30,6 +31,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => RatingsProvider()),
         ChangeNotifierProvider(create: (context) => SettingsProvider()),
         ChangeNotifierProvider(create: (context) => ScrollWheelIndexProvider()),
+        ChangeNotifierProvider(create: (context) => BreathingSettingsProvider()),
         ChangeNotifierProvider(create: (context) => StreakProvider()),
         ChangeNotifierProvider(create: (context) => GongProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),

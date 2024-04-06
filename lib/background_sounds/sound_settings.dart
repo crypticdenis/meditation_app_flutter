@@ -8,14 +8,14 @@ import 'sounds.dart';
 import '../custom_app_bar.dart';
 import '../providers/theme_provider.dart';
 import '../providers/gong_provider.dart';
-import 'package:meditation_app_flutter/gong_feature/gongs.dart';
+import 'package:meditation_app_flutter/gong/gongs.dart';
+import 'package:meditation_app_flutter/common_definitions.dart';
 
 class SoundSelectionScreen extends StatelessWidget {
   const SoundSelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final gongProvider = Provider.of<GongProvider>(context);
     final soundProvider = Provider.of<BackgroundSoundProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
 
@@ -38,13 +38,7 @@ class SoundSelectionScreen extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center, // Ensures the text is centered
                 children: [
-                  Text(
-                    'Soundscapes',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                    ),
-                  ),
+                  buildSectionHeader('Soundscapes'),
                   Align(
                     alignment: Alignment.centerRight, // Aligns the switch to the right
                     child: Switch(
@@ -77,33 +71,6 @@ class SoundSelectionScreen extends StatelessWidget {
                         soundProvider.setSound(index),
                     mode: WheelMode.sounds,
                     colorNames: BackgroundsSounds.names,
-                  ),
-                ),
-              ),
-            ),
-            const Text(
-              'Gongs',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 25,
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white12,
-                    borderRadius: BorderRadius.circular(20), // Rounded edges
-                  ),
-                  margin:
-                      const EdgeInsets.only(left: 20, right: 20, bottom: 30),
-                  child: CustomTimeWheel(
-                    itemCount: GongSounds.names.length,
-                    selectedValue: gongProvider.currentGongIndex,
-                    onSelectedItemChanged: (index) =>
-                        gongProvider.setGong(index),
-                    mode: WheelMode.gongs,
-                    colorNames: GongSounds.names,
                   ),
                 ),
               ),

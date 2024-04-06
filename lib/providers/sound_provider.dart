@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/widgets.dart';
-import 'package:meditation_app_flutter/background_sounds_feature/sounds.dart';
+import 'package:meditation_app_flutter/background_sounds/sounds.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {

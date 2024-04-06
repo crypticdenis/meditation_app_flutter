@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
-import 'package:meditation_app_flutter/analytics/monthly_ratings.dart';
-import 'package:meditation_app_flutter/analytics/yearly_rating.dart';
-import 'package:meditation_app_flutter/analytics/week_rating_widget.dart';
+import 'monthly_ratings.dart';
+import 'yearly_rating.dart';
+import 'week_rating_widget.dart';
+import 'package:meditation_app_flutter/providers/streak_provider.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -24,6 +25,8 @@ class AnalyticsScreenState extends State<AnalyticsScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final streakProvider = Provider.of<StreakProvider>(context);
+    final currentStreak = streakProvider.streak;
 
     return Scaffold(
       extendBody: true,
@@ -35,6 +38,26 @@ class AnalyticsScreenState extends State<AnalyticsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Container(
+              margin: const EdgeInsets.all(25.0),
+              decoration: BoxDecoration(
+                color: Colors.white12,
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      "Current Streak: $currentStreak",
+                      style:
+                      const TextStyle(color: Colors.white, fontSize: 24),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const Padding(
               padding: EdgeInsets.only(top: 55, bottom: 15),
               child: Text(

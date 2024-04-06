@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'actual_settings_screen.dart';
-import 'background_sounds_feature/sound_settings.dart';
+import 'background_sounds/sound_settings.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
