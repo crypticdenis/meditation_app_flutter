@@ -5,6 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/background_sounds/sound_settings.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
 import 'package:meditation_app_flutter/meditation/meditation_session_controller.dart';
+import 'package:meditation_app_flutter/meditation/breathing/breathing.dart';
+import 'package:meditation_app_flutter/meditation/meditation.dart';
+import 'package:meditation_app_flutter/providers/meditation_time_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -145,8 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     ConstrainedBox(
                       constraints: BoxConstraints(
-                        maxHeight: MediaQuery.of(context).size.height /
-                            2,
+                        maxHeight: MediaQuery.of(context).size.height / 2,
                       ),
                       child: FutureBuilder<List<MeditationSession>>(
                         future: MeditationSessionManager().getDiverseSessions(),
@@ -180,9 +182,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                               itemCount: uniqueSessions.length,
+                              itemCount: uniqueSessions.length,
                               itemBuilder: (context, index) {
                                 final session = uniqueSessions[index];
+                                final Widget destinationScreen = session
+                                        .isBreathingExercise
+                                    ? const BreathingScreen()
+                                    : const MeditationScreen(); // Destination screen based on session type
                                 return Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white30,
@@ -205,7 +211,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: Colors.white,
                                     ),
                                     onTap: () {
-                                      // Handle the tap event
+                                      // Set the selected session duration in a provider before navigating
+                                      Provider.of<MeditationTimeProvider>(
+                                              context,
+                                              listen: false)
+                                          .selectedMinute = session.duration;
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                destinationScreen),
+                                      );
                                     },
                                   ),
                                 );

@@ -2,16 +2,37 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<Map<String, String>> getRandomQuote() async {
+  final prefs = await SharedPreferences.getInstance();
+  final lastQuoteTime = prefs.getInt('last_quote_time');
+  final currentTime = DateTime.now().millisecondsSinceEpoch;
+
+  if (lastQuoteTime != null &&
+      DateTime.fromMillisecondsSinceEpoch(lastQuoteTime).add(Duration(days: 1)).isAfter(DateTime.now())) {
+    final lastQuote = prefs.getString('last_quote');
+    final lastAuthor = prefs.getString('last_author');
+    if (lastQuote != null && lastAuthor != null) {
+      return {"quote": lastQuote, "author": lastAuthor};
+    }
+  }
+
+  // If there's no valid cached quote, fetch a new one
   final String response = await rootBundle.loadString('assets/quotes.json');
-  final List<dynamic> quotes = await json.decode(response);
+  final List<dynamic> quotes = json.decode(response);
   final randomIndex = Random().nextInt(quotes.length);
-  return {
-    "quote": quotes[randomIndex]['quote'],
-    "author": quotes[randomIndex]['author']
-  };
+  final newQuote = quotes[randomIndex]['quote'];
+  final newAuthor = quotes[randomIndex]['author'];
+
+  // Save the new quote and the current time to SharedPreferences
+  await prefs.setString('last_quote', newQuote);
+  await prefs.setString('last_author', newAuthor);
+  await prefs.setInt('last_quote_time', currentTime);
+
+  return {"quote": newQuote, "author": newAuthor};
 }
+
 
 enum TimerOperation { start, pause, resume, reset }
 

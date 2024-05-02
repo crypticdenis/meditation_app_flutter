@@ -55,10 +55,18 @@ class _SinusoidalWaveWidgetState extends State<SinusoidalWaveWidget>
   @override
   void didUpdateWidget(covariant SinusoidalWaveWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.inhaleDuration != oldWidget.inhaleDuration ||
+        widget.exhaleDuration != oldWidget.exhaleDuration) {
+      int totalDuration = widget.inhaleDuration + widget.exhaleDuration;
+      _controller.duration = Duration(seconds: totalDuration);
+      _controller.reset();
+      _controller.repeat();
+    }
     if (widget.timerOperation != oldWidget.timerOperation) {
       _handleTimerOperationChange(widget.timerOperation);
     }
   }
+
 
   void _handleTimerOperationChange(TimerOperation? operation) {
     if (operation == TimerOperation.pause) {
