@@ -10,6 +10,7 @@ import 'package:meditation_app_flutter/providers/sound_provider.dart';
 import 'package:meditation_app_flutter/providers/ratings_provider.dart';
 import 'package:meditation_app_flutter/providers/gong_provider.dart';
 import 'home.dart';
+import 'package:meditation_app_flutter/Profile/ProfileScreen.dart';
 import 'package:meditation_app_flutter/learn/learn.dart';
 
 class Home extends StatefulWidget {
@@ -51,6 +52,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _widgetOptions = [
     HomeScreen(),
     DurationSuggestions(),
+    Profile(),
     Learn(),
     ActualSettingsScreen(),
   ];
@@ -82,6 +84,10 @@ class _HomeState extends State<Home> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.self_improvement),
                   label: 'Meditation',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Profile',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.book),
