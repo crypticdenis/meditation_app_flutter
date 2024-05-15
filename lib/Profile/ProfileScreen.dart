@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -11,6 +12,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileScreenState extends State<Profile> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,6 @@ class _ProfileScreenState extends State<Profile> {
                 ),
               ),
               SizedBox(height: 20),
-              // Adds space between the text and the form
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -44,34 +45,46 @@ class _ProfileScreenState extends State<Profile> {
                   labelText: 'Email',
                   hintText: 'Enter your email here',
                   labelStyle: TextStyle(color: Colors.white),
-                  // Label text color
                   hintStyle: TextStyle(color: Colors.white60),
-                  // Hint text color
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Colors
-                            .white), // Border color when TextField is enabled
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Colors
-                            .white), // Border color when TextField is focused
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                 ),
                 keyboardType: TextInputType.emailAddress,
-                style: TextStyle(color: Colors.white), // Input text color
+                style: TextStyle(color: Colors.white),
               ),
               SizedBox(height: 10),
-              // Adds some space between the input field and the button
+              TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password',
+                  hintText: 'Enter your password here',
+                  labelStyle: TextStyle(color: Colors.white),
+                  hintStyle: TextStyle(color: Colors.white60),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                ),
+                obscureText: true,
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _signUp,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white, // Button background color
-                  foregroundColor: Colors.black, // Button text color
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), // Rounded corners
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  elevation: 4, // Shadow elevation
+                  elevation: 4,
                 ),
                 child: Text('Sign Up'),
               ),
@@ -82,14 +95,30 @@ class _ProfileScreenState extends State<Profile> {
     );
   }
 
-  void _signUp() {
-    // Implement your sign-up logic here
-    print('Email: ${_emailController.text}');
+  void _signUp() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("User successfully signed up!")));
+    } on FirebaseAuthException catch (e) {
+      String message = "An error occurred, please try again.";
+      if (e.code == 'weak-password') {
+        message = 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        message = 'The account already exists for that email.';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+    }
   }
 
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 }

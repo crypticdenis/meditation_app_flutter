@@ -11,6 +11,8 @@ import 'providers/streak_provider.dart';
 import 'providers/sound_provider.dart';
 import 'providers/settings_provider.dart';
 import 'providers/ratings_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
