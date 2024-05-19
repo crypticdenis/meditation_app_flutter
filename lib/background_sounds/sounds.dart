@@ -11,3 +11,4 @@ class BackgroundsSounds {
     'sounds/serenity.mp3',
   ];
 }
+

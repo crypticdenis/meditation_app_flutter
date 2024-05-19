@@ -11,20 +11,19 @@ import 'providers/streak_provider.dart';
 import 'providers/sound_provider.dart';
 import 'providers/settings_provider.dart';
 import 'providers/ratings_provider.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_app_check/firebase_app_check.dart'; // Commented out
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "AIzaSyArYkJDXLe559FpwXl0HoL-7sUFwSN1Vc4",
-      appId: "1:268853907281:android:51508d9d003b6d93a9cd70",
-      messagingSenderId: "268853907281",
-      projectId: "meditation-6f139",
-      storageBucket: "meditation-6f139.appspot.com",
-    ),
+  await Firebase.initializeApp();
+
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.debug,
+    appleProvider: AppleProvider.appAttest,
   );
+
+
 
   runApp(
     MultiProvider(
@@ -33,7 +32,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => RatingsProvider()),
         ChangeNotifierProvider(create: (context) => SettingsProvider()),
         ChangeNotifierProvider(create: (context) => ScrollWheelIndexProvider()),
-        ChangeNotifierProvider(create: (context) => BreathingSettingsProvider()),
+        ChangeNotifierProvider(
+            create: (context) => BreathingSettingsProvider()),
         ChangeNotifierProvider(create: (context) => StreakProvider()),
         ChangeNotifierProvider(create: (context) => GongProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),

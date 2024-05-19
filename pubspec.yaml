@@ -30,9 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^2.27.1
-  cloud_firestore: ^4.15.9
-  firebase_storage: ^11.6.10
+  firebase_core: ^2.31.0
+  cloud_firestore: ^4.17.3
+  firebase_storage: ^11.7.5
   simple_gesture_detector: ^0.2.1
 
 
@@ -45,12 +45,14 @@ dependencies:
   shared_preferences: ^2.2.2
   provider: ^6.1.2
   audioplayers: ^6.0.0
-  mockito: ^5.4.4
-  intl: ^0.19.0
-  fl_chart: ^0.67.0
-  fake_async: ^1.3.1
-  vibration: ^1.8.4
   firebase_auth: ^4.19.5
+  firebase_database: ^10.5.5
+  firebase_messaging: ^14.9.2
+  firebase_app_check: ^0.2.2+5
+  fl_chart: ^0.68.0
+  intl: ^0.19.0
+  vibration: ^1.8.4
+  google_sign_in: ^6.2.1
 
 
 dev_dependencies:
@@ -63,7 +65,6 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
-  build_runner: ^2.4.9
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -82,9 +83,6 @@ flutter:
     - assets/icons/cross.png
     - assets/gongs/
     - assets/sounds/
-    - assets/images/
-    - assets/quotes.json
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

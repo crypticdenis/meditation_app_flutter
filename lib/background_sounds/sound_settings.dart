@@ -63,7 +63,7 @@ class SoundSelectionScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20), // Rounded edges
                   ),
                   margin:
-                      const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                  const EdgeInsets.only(left: 20, right: 20, bottom: 30),
                   child: CustomTimeWheel(
                     itemCount: BackgroundsSounds.names.length,
                     selectedValue: soundProvider.currentSoundIndex,

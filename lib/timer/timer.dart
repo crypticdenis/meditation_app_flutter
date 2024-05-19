@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../common_definitions.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../gong/gongs.dart';
@@ -8,7 +7,6 @@ import '../providers/gong_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/streak_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Niu/rate_meditation.dart';
 import 'package:meditation_app_flutter/home/main_home.dart';
 
 class TimerWidget extends StatefulWidget {
@@ -16,7 +14,7 @@ class TimerWidget extends StatefulWidget {
   final int second;
   final Function()? onTimerComplete;
   final TimerOperation operation;
-  final TimerDisplayMode displayMode; // Add this line
+  final bool isTimerVisible;
 
   const TimerWidget({
     super.key,
@@ -24,7 +22,7 @@ class TimerWidget extends StatefulWidget {
     this.second = 0,
     this.onTimerComplete,
     this.operation = TimerOperation.start,
-    this.displayMode = TimerDisplayMode.both, // Default to showing both
+    required this.isTimerVisible,
   });
 
   @override
@@ -34,7 +32,9 @@ class TimerWidget extends StatefulWidget {
 class _TimerWidgetState extends State<TimerWidget> {
   late int _remainingSeconds;
   late int _totalSeconds;
-  Timer? _timer;
+  Timer? _digitTimer;
+  Timer? _progressTimer;
+  int _elapsedTenths = 0;
 
   @override
   void initState() {
@@ -46,7 +46,6 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   @override
   void didUpdateWidget(TimerWidget oldWidget) {
-    print("this didUpdateWidget is in use ");
     super.didUpdateWidget(oldWidget);
     if (widget.operation != oldWidget.operation) {
       _handleOperation(widget.operation);
@@ -54,40 +53,42 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   void _handleOperation(TimerOperation operation) {
-    print("this _handleOperation is in use ");
     switch (operation) {
       case TimerOperation.start:
       case TimerOperation.resume:
-        _startTimer();
+        _startTimers();
         break;
       case TimerOperation.pause:
-        _pauseTimer();
+        _pauseTimers();
         break;
       case TimerOperation.reset:
-        _resetTimer();
+        _resetTimers();
         break;
     }
   }
 
-  void _resetTimer() {
-    print("this _resetTimer is in use ");
-    _timer?.cancel();
+  void _resetTimers() {
+    _digitTimer?.cancel();
+    _progressTimer?.cancel();
     setState(() {
       _remainingSeconds = widget.minute * 60 + widget.second;
+      _elapsedTenths = 0;
     });
   }
 
-  void _startTimer() {
-    print("this _startTimer is in use ");
+  void _startTimers() {
     _playGongSound();
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _digitTimer?.cancel();
+    _progressTimer?.cancel();
+
+    _digitTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
         setState(() {
           _remainingSeconds--;
         });
       } else {
-        _timer?.cancel();
+        _digitTimer?.cancel();
+        _progressTimer?.cancel();
         _handleTimerComplete();
         _playGongSound();
         if (widget.onTimerComplete != null) {
@@ -95,15 +96,18 @@ class _TimerWidgetState extends State<TimerWidget> {
         }
       }
     });
+
+    _progressTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      setState(() {
+        _elapsedTenths++;
+      });
+    });
   }
 
   void _playGongSound() async {
-    print("this _playGongSound is in use ");
     final gongProvider = Provider.of<GongProvider>(context, listen: false);
     if (gongProvider.gongEnabled) {
-      final String gongSoundPath =
-          GongSounds.files[gongProvider.currentGongIndex];
-
+      final String gongSoundPath = GongSounds.files[gongProvider.currentGongIndex];
       final player = AudioPlayer();
       await player.play(AssetSource(gongSoundPath));
     }
@@ -116,11 +120,9 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   void _handleTimerComplete() async {
-    print("This _handleTimerComplete is in use");
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-          builder: (context) => Home()), // Assuming Home is defined elsewhere
+      MaterialPageRoute(builder: (context) => Home()),
     );
 
     final streakProvider = Provider.of<StreakProvider>(context, listen: false);
@@ -130,30 +132,26 @@ class _TimerWidgetState extends State<TimerWidget> {
         .difference(DateTime(lastReset.year, lastReset.month, lastReset.day))
         .inDays;
 
-    print(streakProvider.streak);
-
-    // Assuming streak == 0 indicates the user hasn't started a streak yet or it was reset
     if (differenceInDays == 0 && streakProvider.streak > 0) {
       // User already interacted today, so don't change the streak.
     } else if (differenceInDays == 1) {
       streakProvider.incrementStreak(); // Continue streak
     } else if (differenceInDays > 1) {
-      streakProvider
-          .resetStreak(); // Reset streak if more than a day has passed
+      streakProvider.resetStreak(); // Reset streak if more than a day has passed
     } else if (streakProvider.streak == 0) {
       streakProvider.incrementStreak(); // Start streak
     }
-    print(streakProvider.streak);
   }
 
-  void _pauseTimer() {
-    print("this _pauseTimer is in use ");
-    _timer?.cancel();
+  void _pauseTimers() {
+    _digitTimer?.cancel();
+    _progressTimer?.cancel();
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _digitTimer?.cancel();
+    _progressTimer?.cancel();
     super.dispose();
   }
 
@@ -163,71 +161,39 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     final minutes = twoDigits(_remainingSeconds ~/ 60);
     final seconds = twoDigits(_remainingSeconds % 60);
-    double progress = (_totalSeconds - _remainingSeconds) / _totalSeconds;
+    double progress = (_elapsedTenths / 10) / _totalSeconds;
 
-    // Conditional rendering based on the display mode
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 100), // Updated to 200
-            child: Column(
-              children: <Widget>[
-                if (widget.displayMode == TimerDisplayMode.both ||
-                    widget.displayMode == TimerDisplayMode.progressBar)
-                  SizedBox(
-                    width: 220,
-                    height: 220,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        SizedBox(
-                          width: 150,
-                          height: 150,
-                          child: CircularProgressIndicator(
-                            value: progress,
-                            backgroundColor: Colors.transparent,
-                            color: Colors.white,
-                            strokeWidth: 8,
-                          ),
-                        ),
-                        if (widget.displayMode == TimerDisplayMode.both)
-                          Text(
-                            '$minutes:$seconds',
-                            style: const TextStyle(
-                              fontSize: 32.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                if (widget.displayMode == TimerDisplayMode.timer)
-                  Text(
-                    '$minutes:$seconds',
-                    style: const TextStyle(
-                      fontSize: 32.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                if (widget.displayMode == TimerDisplayMode.none)
-                  Text(
-                    'Enable Timer in Settings',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-              ],
+    return Stack(
+      children: <Widget>[
+        Center(
+          child: AnimatedOpacity(
+            opacity: widget.isTimerVisible ? 1.0 : 0.0,
+            duration: Duration(seconds: 1),
+            child: Text(
+              '$minutes:$seconds',
+              style: const TextStyle(
+                fontSize: 32.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
-        ],
-      ),
+        ),
+        Positioned(
+          bottom: 20,
+          left: 20,
+          right: 20,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: Colors.white.withOpacity(0.3),
+              color: Colors.white,
+              minHeight: 8,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
