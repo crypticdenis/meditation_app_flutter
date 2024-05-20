@@ -3,14 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
 import 'login_logic.dart';
 
-class LoginScreen extends StatefulWidget {
+class SignInScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignInScreenState createState() => _SignInScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   final LoginLogic _loginLogic = LoginLogic();
 
@@ -39,11 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Enter your email here',
                     ),
                     keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(
-                        color: Colors
-                            .white), // Hier änderst du die Farbe des eingegebenen Textes
+                    style: TextStyle(color: Colors.white), // Change the color of the input text
                   ),
-
                   SizedBox(height: 10),
                   TextField(
                     controller: _passwordController,
@@ -52,21 +50,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       labelText: 'Password',
                       hintText: 'Enter your password here',
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(
-                        color: Colors
-                            .white), // Hier änderst du die Farbe des eingegebenen Textes
+                    obscureText: true,
+                    style: TextStyle(color: Colors.white), // Change the color of the input text
                   ),
                   SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        _loginLogic.signUp(
+                      onPressed: _isLoading ? null : () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        await _loginLogic.signIn(
                           emailController: _emailController,
                           passwordController: _passwordController,
                           context: context,
                         );
+                        setState(() {
+                          _isLoading = false;
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white30,
@@ -76,40 +78,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         elevation: 4,
                       ),
-                      child: Text(
-                        'Sign Up',
-                        style: const TextStyle(
-                            fontSize: 18, color: Colors.white70),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _loginLogic.signInWithGoogle(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white30,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(35),
-                        ),
-                        elevation: 4,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.g_mobiledata, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text(
-                            'Sign in with Google',
-                            style: const TextStyle(
-                                fontSize: 18, color: Colors.white70),
-                          ),
-                        ],
+                      child: _isLoading
+                          ? CircularProgressIndicator()
+                          : Text(
+                        'Sign In',
+                        style: const TextStyle(fontSize: 18, color: Colors.white70),
                       ),
                     ),
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meditation_app_flutter/actual_settings_screen.dart';
 import 'package:meditation_app_flutter/providers/breathing_rhythm_provider.dart';
 import 'package:meditation_app_flutter/providers/settings_provider.dart';
@@ -7,10 +8,10 @@ import 'package:meditation_app_flutter/providers/streak_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/meditation/meditation_preselect.dart';
 import 'package:meditation_app_flutter/providers/sound_provider.dart';
+import 'home.dart';
 import 'package:meditation_app_flutter/providers/ratings_provider.dart';
 import 'package:meditation_app_flutter/providers/gong_provider.dart';
-import 'home.dart';
-import 'package:meditation_app_flutter/Profile/ProfileScreen.dart';
+import 'package:meditation_app_flutter/Profile/ProfileScreen.dart'; // Correct import path
 import 'package:meditation_app_flutter/learn/learn.dart';
 
 class Home extends StatefulWidget {
@@ -30,6 +31,7 @@ class _HomeState extends State<Home> {
   late GongProvider _gongProvider;
   late SettingsProvider _settingsProvider;
   late BreathingSettingsProvider _breathprovider;
+  User? _user;
 
   @override
   void initState() {
@@ -47,12 +49,18 @@ class _HomeState extends State<Home> {
     _initFuture = _backgroundSoundProvider.init();
     _gongProvider = Provider.of<GongProvider>(context, listen: false);
     _initFuture = _gongProvider.init();
+    _user = FirebaseAuth.instance.currentUser;
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      setState(() {
+        _user = user;
+      });
+    });
   }
 
   final List<Widget> _widgetOptions = [
     HomeScreen(),
     DurationSuggestions(),
-    Profile(),
+    Profile(), // Reference the Profile screen directly
     Learn(),
     ActualSettingsScreen(),
   ];

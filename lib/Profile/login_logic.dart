@@ -46,12 +46,9 @@ class LoginLogic {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      if (userCredential.user != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Signed in successfully')),
-        );
-        Navigator.of(context).pushReplacementNamed('/home');
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Signed in successfully')),
+      );
     } on FirebaseAuthException catch (e) {
       String message;
       if (e.code == 'user-not-found') {

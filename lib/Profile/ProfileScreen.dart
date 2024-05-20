@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:meditation_app_flutter/Profile/sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
-import 'login_screen.dart'; // Import the LoginScreen
+import 'sign_in.dart';
+import 'after_log_success.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -12,18 +13,61 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<Profile> {
+  User? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser;
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      setState(() {
+        _user = user;
+      });
+    });
+  }
+
+  void _showSignInModal(BuildContext context) {
+    final gradientProvider = Provider.of<ThemeProvider>(context, listen: false);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            gradient: gradientProvider.currentGradient,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
+          ),
+          child: SignInScreen(
+            onLoginSuccess: () {
+              Navigator.pop(context);
+              setState(() {
+                _user = FirebaseAuth.instance.currentUser;
+              });
+            },
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    final gradientProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: themeProvider.currentGradient,
+          gradient: gradientProvider.currentGradient,
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
+          padding: const EdgeInsets.all(15.0),
+          child: _user == null
+              ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
@@ -37,26 +81,7 @@ class _ProfileScreenState extends State<Profile> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16),
-                          ),
-                        ),
-                        child: SignInScreen(), // Call the LoginScreen
-                      );
-                    },
-                  );
-                },
+                onPressed: () => _showSignInModal(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
@@ -68,11 +93,10 @@ class _ProfileScreenState extends State<Profile> {
                 child: Text('Sign Up'),
               ),
             ],
-          ),
+          )
+              : AfterLogSuccess(),
         ),
       ),
     );
   }
 }
-
-

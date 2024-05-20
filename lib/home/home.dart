@@ -8,6 +8,7 @@ import 'package:meditation_app_flutter/meditation/meditation_session_controller.
 import 'package:meditation_app_flutter/meditation/breathing/breathing.dart';
 import 'package:meditation_app_flutter/meditation/meditation.dart';
 import 'package:meditation_app_flutter/providers/meditation_time_provider.dart';
+import 'package:meditation_app_flutter/Profile/ProfileScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
