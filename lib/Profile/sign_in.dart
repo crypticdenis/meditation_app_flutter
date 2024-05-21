@@ -23,6 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     final gradientProvider = Provider.of<ThemeProvider>(context); // Use GradientProvider
+    final focusColor = Colors.white; // Desired focus color
 
     return Scaffold(
       body: Container(
@@ -52,20 +53,34 @@ class _SignInScreenState extends State<SignInScreen> {
                       controller: _emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: focusColor),
+                        ),
                         labelText: 'Email',
                         hintText: 'Enter your email here',
+                        labelStyle: TextStyle(color: focusColor),
+                        hintStyle: TextStyle(color: Colors.white70),
                       ),
                       keyboardType: TextInputType.emailAddress,
+                      style: TextStyle(color: Colors.white),
+                      cursorColor: focusColor,
                     ),
                     SizedBox(height: 10),
                     TextField(
                       controller: _passwordController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: focusColor),
+                        ),
                         labelText: 'Password',
                         hintText: 'Enter your password here',
+                        labelStyle: TextStyle(color: focusColor),
+                        hintStyle: TextStyle(color: Colors.white70),
                       ),
                       obscureText: true,
+                      style: TextStyle(color: Colors.white),
+                      cursorColor: focusColor,
                     ),
                     SizedBox(height: 20),
                     SizedBox(
@@ -99,7 +114,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ? CircularProgressIndicator()
                             : Text(
                           _isSignUp ? 'Sign Up' : 'Log In',
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 18, color: Colors.black),
                         ),
                       ),
                     ),
@@ -113,6 +128,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         _isSignUp
                             ? 'Already have an account? Log In'
                             : 'Don\'t have an account? Sign Up',
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -129,8 +145,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         });
                         widget.onLoginSuccess();
                       },
-                      icon: Icon(Icons.login),
-                      label: Text('Sign In with Google'),
+                      icon: Icon(Icons.login, color: Colors.black),
+                      label: Text('Sign In with Google', style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),

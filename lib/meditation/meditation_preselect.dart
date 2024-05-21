@@ -27,7 +27,7 @@ class DurationSuggestions extends StatelessWidget {
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(5.0),
       child: Row(
         children: List.generate(suggestedDurations.length + 1, (index) {
           return _buildDurationButton(
@@ -48,8 +48,10 @@ class DurationSuggestions extends StatelessWidget {
         IconData? iconData}) {
     final buttonText = duration != null ? '$duration min' : '+';
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: SizedBox(
+        width: 160, // Set this to your desired size
+        height: 160, // Set this to your desired size
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white30,
@@ -69,13 +71,13 @@ class DurationSuggestions extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (iconData != null)
-                Icon(iconData, color: Colors.white, size: 24.0),
+                Icon(iconData, color: Colors.white, size: 40.0),
               Text(buttonText,
-                  style: const TextStyle(fontSize: 20, color: Colors.white)),
+                  style: const TextStyle(fontSize: 25, color: Colors.white)),
               if (duration != null)
                 Text(
                   isMeditation ? 'Simple Meditation' : 'Breathing Exercise',
-                  style: const TextStyle(fontSize: 12, color: Colors.white70),
+                  style: const TextStyle(fontSize: 20, color: Colors.white70),
                 ),
             ],
           ),
@@ -86,7 +88,7 @@ class DurationSuggestions extends StatelessWidget {
 
   Widget buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 7.5),
       child: Text(
         title,
         style: const TextStyle(fontSize: 24, color: Colors.white),
@@ -106,15 +108,8 @@ class DurationSuggestions extends StatelessWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                'Meditation',
-                style: TextStyle(
-                  fontFamily: 'SourceSansPro',
-                  fontWeight: FontWeight.w200, // ExtraLight
-                  fontSize: 24.0,
-                  color: Colors.white,
-                ),
+                'Practice',
               ),
-
               background: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -143,14 +138,10 @@ class DurationSuggestions extends StatelessWidget {
                     gradient: themeProvider.currentGradient,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(2.5),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        buildSectionHeader('Popular meditation playlists'),
-                        _buildHorizontalScroll(context, true),
-                        buildSectionHeader('Music for meditation'),
-                        _buildHorizontalScroll(context, false),
                         buildSectionHeader('Meditation Timer'),
                         _buildHorizontalScroll(context, true),
                         buildSectionHeader('Breathing Timer'),
