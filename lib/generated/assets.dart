@@ -19,6 +19,8 @@ class Assets {
   static const String iconsPlay = 'assets/icons/play.png';
   static const String imagesNature1 = 'assets/images/nature1.png';
   static const String imagesNature2 = 'assets/images/nature2.png';
+  static const String imagesZenbowl = 'assets/images/zenbowl.png';
+  static const String meditationalOrgAssetsQuotes = 'assets/quotes.json';
   static const String soundsOceanWaves = 'assets/sounds/ocean_waves.mp3';
   static const String soundsRainyDay = 'assets/sounds/rainy_day.mp3';
   static const String soundsSerenity = 'assets/sounds/serenity.mp3';

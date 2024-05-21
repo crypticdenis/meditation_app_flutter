@@ -82,13 +82,25 @@ flutter:
     - assets/icons/pause.png
     - assets/icons/cross.png
     - assets/gongs/
+    - assets/images/
     - assets/sounds/
+    - assets/quotes.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
+
+fonts:
+  - family: Lato
+    fonts:
+      - asset: fonts/Lato-Regular.ttf
+      - asset: fonts/Lato-Bold.ttf
+        weight: 700
+  - family: SourceSansPro
+    fonts:
+      - asset: assets/fonts/SourceSansPro-ExtraLight.ttf
 
 
   # To add custom fonts to your application, add a fonts section here,

@@ -83,36 +83,40 @@ class _HomeState extends State<Home> {
             body: Center(
               child: _widgetOptions.elementAt(_selectedIndex),
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.self_improvement),
-                  label: 'Meditation',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.book),
-                  label: 'Learn',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: 'Settings',
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              selectedItemColor: Colors.white,
-              unselectedItemColor: Colors.white30,
-              backgroundColor: Colors.black12,
-              type: BottomNavigationBarType.fixed,
-              elevation: 0,
-              onTap: _onItemTapped,
+            bottomNavigationBar: Consumer<ThemeProvider>(
+              builder: (context, themeProvider, child) {
+                return BottomNavigationBar(
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.self_improvement),
+                      label: 'Meditation',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: 'Profile',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.book),
+                      label: 'Learn',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.settings),
+                      label: 'Settings',
+                    ),
+                  ],
+                  currentIndex: _selectedIndex,
+                  selectedItemColor: Colors.white,
+                  unselectedItemColor: Colors.white30,
+                  backgroundColor: themeProvider.currentGradient.colors.last,
+                  type: BottomNavigationBarType.fixed,
+                  elevation: 0,
+                  onTap: _onItemTapped,
+                );
+              },
             ),
           );
         } else {

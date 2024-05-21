@@ -21,37 +21,31 @@ class DurationSuggestions extends StatelessWidget {
     );
   }
 
-  Widget _buildDurationsGrid(BuildContext context,
-      {required bool isMeditation}) {
+  Widget _buildHorizontalScroll(BuildContext context, bool isMeditation) {
     final Widget destinationScreen =
-        isMeditation ? const MeditationScreen() : const BreathingScreen();
+    isMeditation ? const MeditationScreen() : const BreathingScreen();
 
-    int crossAxisCount = 2;
-
-    return GridView.count(
-      crossAxisCount: crossAxisCount,
-      crossAxisSpacing: 15,
-      mainAxisSpacing: 15,
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.all(15.0),
-      childAspectRatio: 2 / 1,
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      children: List.generate(suggestedDurations.length + 1, (index) {
-        return _buildDurationButton(
-          context,
-          index < suggestedDurations.length ? suggestedDurations[index] : null,
-          destination: destinationScreen,
-          iconData: isMeditation ? Icons.self_improvement : Icons.air,
-          isMeditation: isMeditation, // Pass the isMeditation parameter
-        );
-      }),
+      child: Row(
+        children: List.generate(suggestedDurations.length + 1, (index) {
+          return _buildDurationButton(
+            context,
+            index < suggestedDurations.length ? suggestedDurations[index] : null,
+            destination: destinationScreen,
+            iconData: isMeditation ? Icons.self_improvement : Icons.air,
+            isMeditation: isMeditation,
+          );
+        }),
+      ),
     );
   }
 
   Widget _buildDurationButton(BuildContext context, int? duration,
       {required Widget destination,
-      required bool isMeditation,
-      IconData? iconData}) {
+        required bool isMeditation,
+        IconData? iconData}) {
     final buttonText = duration != null ? '$duration min' : '+';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -73,10 +67,9 @@ class DurationSuggestions extends StatelessWidget {
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            // To keep the icon and text close together
             children: [
               if (iconData != null)
-                Icon(iconData, color: Colors.white, size: 24.0), // The icon
+                Icon(iconData, color: Colors.white, size: 24.0),
               Text(buttonText,
                   style: const TextStyle(fontSize: 20, color: Colors.white)),
               if (duration != null)
@@ -91,51 +84,89 @@ class DurationSuggestions extends StatelessWidget {
     );
   }
 
+  Widget buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 24, color: Colors.white),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(gradient: themeProvider.currentGradient),
-        child: Center(
-          child: Column(
-            children: [
-              Stack(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 150.0,
+            backgroundColor: themeProvider.currentGradient.colors.first,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                'Meditation',
+                style: TextStyle(
+                  fontFamily: 'SourceSansPro',
+                  fontWeight: FontWeight.w200, // ExtraLight
+                  fontSize: 24.0,
+                  color: Colors.white,
+                ),
+              ),
+
+              background: Stack(
+                fit: StackFit.expand,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 15, top: 50.0),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          _buildIconButton(context, Icons.music_note,
-                              const SoundSelectionScreen()),
-                        ],
+                  Image.asset(
+                    'assets/images/zenbowl.png', // Path to the image asset
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.black12, Colors.black54],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 45),
-                    child: buildSectionHeader('Practice'),
-                  ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    buildSectionHeader('Meditation Timer'),
-                    _buildDurationsGrid(context, isMeditation: true),
-                    buildSectionHeader('Breathing Timer'),
-                    _buildDurationsGrid(context, isMeditation: false),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: themeProvider.currentGradient,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildSectionHeader('Popular meditation playlists'),
+                        _buildHorizontalScroll(context, true),
+                        buildSectionHeader('Music for meditation'),
+                        _buildHorizontalScroll(context, false),
+                        buildSectionHeader('Meditation Timer'),
+                        _buildHorizontalScroll(context, true),
+                        buildSectionHeader('Breathing Timer'),
+                        _buildHorizontalScroll(context, false),
+                        buildSectionHeader('Breathing Timer'),
+                        _buildHorizontalScroll(context, false),
+                        buildSectionHeader('Breathing Timer'),
+                        _buildHorizontalScroll(context, false),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
