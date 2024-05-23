@@ -6,12 +6,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showSettingsButton;
   final bool showSoundSettingsButton;
+  final VoidCallback? onBackButtonPressed;
 
   CustomAppBar({
     super.key,
     required this.title,
     this.showSettingsButton = true,
     this.showSoundSettingsButton = true,
+    this.onBackButtonPressed,
   });
 
   @override
@@ -53,7 +55,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-        onPressed: () {
+        onPressed: onBackButtonPressed ?? () {
           Navigator.of(context).pop();
         },
       ),
