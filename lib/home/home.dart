@@ -9,6 +9,7 @@ import 'package:meditation_app_flutter/meditation/breathing/breathing.dart';
 import 'package:meditation_app_flutter/meditation/meditation.dart';
 import 'package:meditation_app_flutter/providers/meditation_time_provider.dart';
 import 'package:meditation_app_flutter/Profile/ProfileScreen.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -98,31 +99,46 @@ class _HomeScreenState extends State<HomeScreen> {
                       return Text('Error: ${snapshot.error}');
                     }
                     if (snapshot.hasData) {
+                      String quote = snapshot.data!['quote']!;
+                      String author = snapshot.data!['author']!;
                       return Container(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.only(
+                            top: 15, left: 15.0, right: 15),
                         decoration: BoxDecoration(
                           color: Colors.white24,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              snapshot.data!['quote']!,
+                              quote,
                               style: TextStyle(
                                 fontSize: 15.0,
                                 color: Colors.white,
                               ),
                             ),
-                            SizedBox(height: 10),
                             Align(
                               alignment: Alignment.bottomRight,
-                              child: Text(
-                                snapshot.data!['author']!,
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  color: Colors.white70,
-                                  fontStyle: FontStyle.italic,
-                                ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    author,
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.white70,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.ios_share,
+                                        color: Colors.white),
+                                    onPressed: () {
+                                      Share.share('$quote - $author');
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
                           ],

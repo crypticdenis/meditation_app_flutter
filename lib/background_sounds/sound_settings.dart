@@ -101,8 +101,8 @@ class SoundSelectionScreen extends StatelessWidget {
                             onChanged: (bool value) {
                               soundProvider.toggleSoundEnabled();
                             },
-                            activeColor: Colors.black,
-                            inactiveThumbColor: Colors.white,
+                            activeColor: Colors.white,
+                            inactiveThumbColor: Colors.red,
                             inactiveTrackColor: Colors.grey,
                           );
                         },

@@ -57,23 +57,18 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
     }
 
     await loadCurrentSoundIndex();
-    await loadSoundEnabledState();
 
-    if (_currentSoundIndex >= _soundData.length) {
-      _currentSoundIndex = 0;
-    }
-
-    if (_soundData[_currentSoundIndex]['restricted'] && !_isAuthenticated) {
-      _isRestrictedSoundPlayed = true;
-    }
-
+    // Always disable sound on initialization
+    _soundEnabled = false;
     notifyListeners();
     print('Initialization complete: soundEnabled=$_soundEnabled');
   }
 
   Future<void> _fetchSoundData() async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('sounds').get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('sounds')
+        .orderBy('restricted') // Sort by the 'restricted' field
+        .get();
     if (snapshot.docs.isEmpty) {
       print('No sound documents found.');
       return;
@@ -186,14 +181,16 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
       _soundEnabled = false;
       saveSoundEnabledState();
     } else if (state == AppLifecycleState.resumed) {
+      _soundEnabled = false;
       if (_shouldResume) {
         initializeAndPlayLoop();
       }
+      saveSoundEnabledState();
     }
   }
 
   void initializeAndPlayLoop() async {
-    if (!_isPlaying) {
+    if (!_isPlaying && _soundEnabled) {
       await _setSound(_currentSoundIndex);
       play();
     }
@@ -213,19 +210,25 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
     notifyListeners();
   }
 
-  void setSound(int index) {
+  void setSound(int index) async {
     _currentSoundIndex = index;
     _isRestrictedSoundPlayed = soundData[index]['restricted'];
     print('Selected sound index: $index');
     print('Selected sound name: ${soundData[index]['name']}');
     print('Is restricted: ${soundData[index]['restricted']}');
+
+    await _setSound(index);
+    if (_soundEnabled) {
+      play();
+    }
     notifyListeners();
   }
+
 
   void stopPlayingRestrictedSound() {
     if (_isRestrictedSoundPlayed) {
       stop();
-      _isRestrictedSoundPlayed = false;
+      //_isRestrictedSoundPlayed = false;
       notifyListeners();
     }
   }
@@ -238,3 +241,4 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
     super.dispose();
   }
 }
+
