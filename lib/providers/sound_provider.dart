@@ -12,11 +12,15 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
   bool _soundEnabled = true;
   List<String> _soundNames = [];
   List<String> _soundUrls = [];
+  List<String> _imageUrls = []; // Add this list for image URLs
+
 
   int get currentSoundIndex => _currentSoundIndex;
   bool get soundEnabled => _soundEnabled;
   List<String> get soundNames => _soundNames;
   int get lengthOfSoundList => soundNames.length;
+  List<String> get imageUrls => _imageUrls; // Add this getter
+
 
   BackgroundSoundProvider() {
     _audioPlayer.setReleaseMode(ReleaseMode.loop);
@@ -35,8 +39,18 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
     final snapshot = await FirebaseFirestore.instance.collection('sounds').get();
     _soundNames = snapshot.docs.map((doc) => doc['name'] as String).toList();
     _soundUrls = snapshot.docs.map((doc) => doc['url'] as String).toList();
+    _imageUrls = await Future.wait(snapshot.docs.map((doc) async {
+      final gsUrl = doc['imageUrl'] as String;
+      return await _convertGsUrlToHttp(gsUrl);
+    }).toList());
     notifyListeners();
   }
+
+  Future<String> _convertGsUrlToHttp(String gsUrl) async {
+    final ref = FirebaseStorage.instance.refFromURL(gsUrl);
+    return await ref.getDownloadURL();
+  }
+
 
   Future<void> loadCurrentSoundIndex() async {
     final prefs = await SharedPreferences.getInstance();

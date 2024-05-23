@@ -48,24 +48,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'SourceSansPro',
-        textTheme: TextTheme(
-          bodyText1: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          bodyText2: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          headline1: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          headline2: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          headline3: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          headline4: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          headline5: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          headline6: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          subtitle1: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          subtitle2: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          caption: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          button: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-          overline: TextStyle(fontWeight: FontWeight.w200), // ExtraLight
-        ),
-      ),
       home: const Home(),
     );
   }

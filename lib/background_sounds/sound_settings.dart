@@ -52,43 +52,61 @@ class SoundSelectionScreen extends StatelessWidget {
             ),
             Expanded(
               child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white12,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
                   child: GridView.builder(
                     padding: const EdgeInsets.all(16.0),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Number of columns
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, // Number of columns
                       crossAxisSpacing: 16.0,
                       mainAxisSpacing: 16.0,
                     ),
                     itemCount: soundProvider.soundNames.length,
                     itemBuilder: (context, index) {
                       final soundName = soundProvider.soundNames[index];
-                      final isSelected = index == soundProvider.currentSoundIndex;
+                      final isSelected =
+                          index == soundProvider.currentSoundIndex;
+                      final imageUrl =
+                          soundProvider.imageUrls[index]; // Get the image URL
                       return GestureDetector(
                         onTap: () => soundProvider.setSound(index),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: isSelected ? Colors.blueAccent : Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: isSelected ? Colors.blue : Colors.transparent,
-                              width: 2,
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              soundName,
-                              style: TextStyle(
-                                color: isSelected ? Colors.white : Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                        child: Opacity(
+                          opacity: isSelected ? 1.0 : 0.5,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              image: DecorationImage(
+                                image: NetworkImage(imageUrl),
+                                fit: BoxFit.cover,
                               ),
-                              textAlign: TextAlign.center,
+                            ),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    image: DecorationImage(
+                                      image: NetworkImage(imageUrl),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: Text(
+                                      soundName,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -97,7 +115,6 @@ class SoundSelectionScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),
