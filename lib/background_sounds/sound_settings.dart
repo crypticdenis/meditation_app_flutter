@@ -115,12 +115,12 @@ class SoundSelectionScreen extends StatelessWidget {
                 child: Center(
                   child: Container(
                     child: GridView.builder(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(10.0),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Number of columns
-                          crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 16.0,
+                          crossAxisCount: 3, // Number of columns
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0,
                         ),
                         itemCount: Provider.of<BackgroundSoundProvider>(context)
                             .soundData
