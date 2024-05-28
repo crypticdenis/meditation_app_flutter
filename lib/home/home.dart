@@ -64,24 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         buildSectionHeader('Welcome Back!'),
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.white24,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'Streak: $currentStreak ',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),

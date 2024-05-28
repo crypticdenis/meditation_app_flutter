@@ -10,6 +10,7 @@ import 'package:meditation_app_flutter/timer/timer_and_picker_logic.dart';
 import 'package:meditation_app_flutter/background_sounds/sound_settings.dart';
 import 'meditation_session_controller.dart';
 import 'dart:async';
+import 'package:meditation_app_flutter/providers/streak_provider.dart'; // Import StreakProvider
 
 class MeditationScreen extends StatefulWidget {
   const MeditationScreen({super.key});
@@ -30,12 +31,15 @@ class _MeditationScreenState extends State<MeditationScreen> {
     timerLogic = TimerLogic(
       context: context,
       onTimerOperationChange: (TimerOperation operation) {
-        setState(() {
-          _timerOperation = operation;
-        });
+        if (mounted) {
+          setState(() {
+            _timerOperation = operation;
+          });
+        }
       },
       onTimerComplete: () {
         print('Timer completed!');
+        _handleTimerComplete(); // Handle streak increment on timer complete
       },
     );
     _resetInactivityTimer();
@@ -44,9 +48,11 @@ class _MeditationScreenState extends State<MeditationScreen> {
   void _resetInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(seconds: 10), () {
-      setState(() {
-        _isTimerVisible = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isTimerVisible = false;
+        });
+      }
     });
   }
 
@@ -54,6 +60,11 @@ class _MeditationScreenState extends State<MeditationScreen> {
   void dispose() {
     _inactivityTimer?.cancel();
     super.dispose();
+  }
+
+  void _handleTimerComplete() {
+    final streakProvider = Provider.of<StreakProvider>(context, listen: false);
+    streakProvider.incrementStreak();
   }
 
   @override
@@ -64,10 +75,12 @@ class _MeditationScreenState extends State<MeditationScreen> {
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _isTimerVisible = true;
-        });
-        _resetInactivityTimer();
+        if (mounted) {
+          setState(() {
+            _isTimerVisible = true;
+          });
+          _resetInactivityTimer();
+        }
       },
       child: Scaffold(
         extendBody: true,
@@ -97,10 +110,12 @@ class _MeditationScreenState extends State<MeditationScreen> {
                 child: InkWell(
                   onTap: () {
                     timerLogic.toggleTimerOperation(_timerOperation);
-                    setState(() {
-                      _isTimerVisible = true;
-                    });
-                    _resetInactivityTimer();
+                    if (mounted) {
+                      setState(() {
+                        _isTimerVisible = true;
+                      });
+                      _resetInactivityTimer();
+                    }
 
                     if (_timerOperation == TimerOperation.start) {
                       final newSession = MeditationSession(
@@ -131,14 +146,12 @@ class _MeditationScreenState extends State<MeditationScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon:
-                          const Icon(Icons.music_note, color: Colors.white),
+                          icon: const Icon(Icons.music_note, color: Colors.white),
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                const SoundSelectionScreen(),
+                                builder: (context) => const SoundSelectionScreen(),
                               ),
                             );
                           },

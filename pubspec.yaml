@@ -55,6 +55,7 @@ dependencies:
   share_plus: ^9.0.0
   vibration: ^1.8.4
   google_sign_in: ^6.2.1
+  mockito: ^5.4.4
 
 
 dev_dependencies:
@@ -67,6 +68,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  build_runner: ^2.4.9
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -87,6 +89,7 @@ flutter:
     - assets/images/
     - assets/sounds/
     - assets/quotes.json
+    - lib/meditation/breathing/SegmentedCirclePainter.dart
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

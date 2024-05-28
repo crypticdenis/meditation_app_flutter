@@ -3,19 +3,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class StreakProvider extends ChangeNotifier {
   int _streak = 0;
-  late DateTime _lastIncrementDate;
-  SharedPreferences? _prefs; // Optional shared preferences for testing
+  DateTime _lastIncrementDate = DateTime.now().toUtc(); // Initialized here
+  SharedPreferences? _prefs;
 
   int get streak => _streak;
 
-  // Updated constructor without direct initialization call
   StreakProvider({SharedPreferences? prefs}) {
     _prefs = prefs;
   }
 
-  // Public method for initializing
   Future<void> init() async {
     await _loadLastIncrementDate();
+    print(streak);
   }
 
   void incrementStreak() {
@@ -40,7 +39,7 @@ class StreakProvider extends ChangeNotifier {
       await _saveLastIncrementDate();
     }
     _streak = _prefs!.getInt('streak') ?? 0;
-    await checkAndResetStreakIfNeeded();
+    await checkAndResetStreakIfNeeded(); // Ensure this check is done once
   }
 
   Future<void> _saveLastIncrementDate() async {
@@ -54,7 +53,11 @@ class StreakProvider extends ChangeNotifier {
     _prefs ??= await SharedPreferences.getInstance();
 
     final now = DateTime.now().toUtc();
-    _lastIncrementDate = DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt('lastIncrementTimestamp')!, isUtc: true);
+    if (_prefs!.containsKey('lastIncrementTimestamp')) {
+      _lastIncrementDate = DateTime.fromMillisecondsSinceEpoch(_prefs!.getInt('lastIncrementTimestamp')!, isUtc: true);
+    } else {
+      _lastIncrementDate = now;
+    }
 
     final lastIncrementDayUtc = DateTime.utc(_lastIncrementDate.year, _lastIncrementDate.month, _lastIncrementDate.day);
     final todayUtc = DateTime.utc(now.year, now.month, now.day);
@@ -62,6 +65,7 @@ class StreakProvider extends ChangeNotifier {
 
     if (difference > 1) {
       resetStreak();
+      notifyListeners(); // Added notifyListeners() here to reflect the changes
     }
   }
 }

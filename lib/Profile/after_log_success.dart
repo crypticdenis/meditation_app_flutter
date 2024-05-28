@@ -3,12 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
 import 'package:meditation_app_flutter/providers/sound_provider.dart'; // Import the provider
+import 'package:meditation_app_flutter/providers/streak_provider.dart';
 
 class AfterLogSuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final soundProvider = Provider.of<BackgroundSoundProvider>(context, listen: false); // Access the sound provider
+    final soundProvider = Provider.of<BackgroundSoundProvider>(context,
+        listen: false); // Access the sound provider
+    final streakProvider = Provider.of<StreakProvider>(context);
+    final currentStreak = streakProvider.streak;
 
     void _logout() async {
       // Toggle sound off
@@ -17,7 +21,8 @@ class AfterLogSuccess extends StatelessWidget {
       }
 
       await FirebaseAuth.instance.signOut();
-      Navigator.of(context).popUntil((route) => route.isFirst); // Go back to home screen
+      Navigator.of(context)
+          .popUntil((route) => route.isFirst); // Go back to home screen
     }
 
     return Scaffold(
@@ -28,9 +33,23 @@ class AfterLogSuccess extends StatelessWidget {
         child: Stack(
           children: [
             Center(
-              child: Text(
-                'You have successfully logged in!',
-                style: TextStyle(fontSize: 24, color: Colors.white),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'Streak: $currentStreak ',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               ),
             ),
             Positioned(

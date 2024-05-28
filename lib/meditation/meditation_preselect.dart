@@ -6,6 +6,7 @@ import 'package:meditation_app_flutter/providers/theme_provider.dart';
 import 'package:meditation_app_flutter/background_sounds/sound_settings.dart';
 import 'package:meditation_app_flutter/meditation/breathing/breathing.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
+import 'breathing/4_7_8.dart';
 
 class DurationSuggestions extends StatelessWidget {
   final List<int> suggestedDurations = [5, 10, 20];
@@ -146,10 +147,8 @@ class DurationSuggestions extends StatelessWidget {
                         _buildHorizontalScroll(context, true),
                         buildSectionHeader('Breathing Timer'),
                         _buildHorizontalScroll(context, false),
-                        buildSectionHeader('Breathing Timer'),
-                        _buildHorizontalScroll(context, false),
-                        buildSectionHeader('Breathing Timer'),
-                        _buildHorizontalScroll(context, false),
+                        buildSectionHeader('Other Exercises'),
+                        _buildOtherExercisesButton(context),
                       ],
                     ),
                   ),
@@ -158,6 +157,44 @@ class DurationSuggestions extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildOtherExercisesButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: SizedBox(
+        width: 160, // Set this to your desired size
+        height: 160, // Set this to your desired size
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white30,
+            foregroundColor: Theme.of(context).colorScheme.onSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const fourseveneigthScreen(),
+              ),
+            );
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.fitness_center, color: Colors.white, size: 40.0),
+              Text(
+                '4-7-8 Exercise',
+                style: const TextStyle(fontSize: 25, color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
