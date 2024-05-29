@@ -7,6 +7,7 @@ import 'package:meditation_app_flutter/background_sounds/sound_settings.dart';
 import 'package:meditation_app_flutter/meditation/breathing/breathing.dart';
 import 'package:meditation_app_flutter/common_definitions.dart';
 import 'breathing/4_7_8.dart';
+import 'breathing/box_breathing.dart'; // Import the BoxedBreathingScreen
 
 class DurationSuggestions extends StatelessWidget {
   final List<int> suggestedDurations = [5, 10, 20];
@@ -24,7 +25,7 @@ class DurationSuggestions extends StatelessWidget {
 
   Widget _buildHorizontalScroll(BuildContext context, bool isMeditation) {
     final Widget destinationScreen =
-    isMeditation ? const MeditationScreen() : const BreathingScreen();
+        isMeditation ? const MeditationScreen() : const BreathingScreen();
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -33,7 +34,9 @@ class DurationSuggestions extends StatelessWidget {
         children: List.generate(suggestedDurations.length + 1, (index) {
           return _buildDurationButton(
             context,
-            index < suggestedDurations.length ? suggestedDurations[index] : null,
+            index < suggestedDurations.length
+                ? suggestedDurations[index]
+                : null,
             destination: destinationScreen,
             iconData: isMeditation ? Icons.self_improvement : Icons.air,
             isMeditation: isMeditation,
@@ -45,8 +48,8 @@ class DurationSuggestions extends StatelessWidget {
 
   Widget _buildDurationButton(BuildContext context, int? duration,
       {required Widget destination,
-        required bool isMeditation,
-        IconData? iconData}) {
+      required bool isMeditation,
+      IconData? iconData}) {
     final buttonText = duration != null ? '$duration min' : '+';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -162,6 +165,27 @@ class DurationSuggestions extends StatelessWidget {
   }
 
   Widget _buildOtherExercisesButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        _buildSpecificExerciseButton(
+          context,
+          '4-7-8 Exercise',
+          Icons.fitness_center,
+          const fourseveneigthScreen(),
+        ),
+        _buildSpecificExerciseButton(
+          context,
+          'Boxed Breathing',
+          Icons.crop_square,
+          const BoxedBreathingScreen(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSpecificExerciseButton(
+      BuildContext context, String text, IconData icon, Widget screen) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: SizedBox(
@@ -179,16 +203,16 @@ class DurationSuggestions extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const fourseveneigthScreen(),
+                builder: (context) => screen,
               ),
             );
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.fitness_center, color: Colors.white, size: 40.0),
+              Icon(icon, color: Colors.white, size: 40.0),
               Text(
-                '4-7-8 Exercise',
+                text,
                 style: const TextStyle(fontSize: 25, color: Colors.white),
                 textAlign: TextAlign.center,
               ),
