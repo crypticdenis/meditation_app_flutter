@@ -10,7 +10,7 @@ import 'package:meditation_app_flutter/timer/timer_and_picker_logic.dart';
 import 'package:meditation_app_flutter/background_sounds/sound_settings.dart';
 import 'meditation_session_controller.dart';
 import 'dart:async';
-import 'package:meditation_app_flutter/providers/streak_provider.dart'; // Import StreakProvider
+import 'package:meditation_app_flutter/providers/streak_provider.dart';
 
 class MeditationScreen extends StatefulWidget {
   const MeditationScreen({super.key});
@@ -39,7 +39,7 @@ class _MeditationScreenState extends State<MeditationScreen> {
       },
       onTimerComplete: () {
         print('Timer completed!');
-        _handleTimerComplete(); // Handle streak increment on timer complete
+        _handleTimerComplete();
       },
     );
     _resetInactivityTimer();
@@ -72,6 +72,18 @@ class _MeditationScreenState extends State<MeditationScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final meditationTimeProvider = Provider.of<MeditationTimeProvider>(context);
     final settingsProvider = Provider.of<SettingsProvider>(context);
+
+    // Check if the provider is still loading the data
+    if (meditationTimeProvider.isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    // Debugging: Print the selected duration
+    print("MeditationScreen build - Selected duration: ${meditationTimeProvider.selectedMinute}");
 
     return GestureDetector(
       onTap: () {
@@ -126,8 +138,7 @@ class _MeditationScreenState extends State<MeditationScreen> {
                     }
                   },
                   child: Image.asset(
-                    _timerOperation == TimerOperation.pause ||
-                        _timerOperation == TimerOperation.reset
+                    _timerOperation == TimerOperation.pause || _timerOperation == TimerOperation.reset
                         ? 'assets/icons/play.png'
                         : 'assets/icons/pause.png',
                     width: 50,
@@ -192,3 +203,4 @@ class _MeditationScreenState extends State<MeditationScreen> {
     );
   }
 }
+

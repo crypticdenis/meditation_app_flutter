@@ -292,7 +292,7 @@ class _SegmentedCircleWidgetState extends State<SegmentedCircleWidget>
           painter: SegmentedCirclePainter(
             phase: _animation.value,
             inhaleDuration: 4, // Hardcoded inhale duration
-            holdDuration: 7, // Hardcoded hold duration
+            holdAfterInhaleDuration: 7, // Hardcoded hold duration
             exhaleDuration: 8, // Hardcoded exhale duration
           ),
           child: Container(width: double.infinity, height: 200),

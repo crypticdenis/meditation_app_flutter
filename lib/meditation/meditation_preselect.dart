@@ -48,8 +48,8 @@ class DurationSuggestions extends StatelessWidget {
 
   Widget _buildDurationButton(BuildContext context, int? duration,
       {required Widget destination,
-      required bool isMeditation,
-      IconData? iconData}) {
+        required bool isMeditation,
+        IconData? iconData}) {
     final buttonText = duration != null ? '$duration min' : '+';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -66,8 +66,10 @@ class DurationSuggestions extends StatelessWidget {
           ),
           onPressed: () {
             final selectedMinute = duration ?? 0;
+            print('Selected duration: $selectedMinute'); // Debug log
             Provider.of<MeditationTimeProvider>(context, listen: false)
                 .selectedMinute = selectedMinute;
+            print('Provider duration: ${Provider.of<MeditationTimeProvider>(context, listen: false).selectedMinute}'); // Debug log
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => destination));
           },
@@ -89,6 +91,7 @@ class DurationSuggestions extends StatelessWidget {
       ),
     );
   }
+
 
   Widget buildSectionHeader(String title) {
     return Padding(

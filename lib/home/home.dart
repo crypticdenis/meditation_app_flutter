@@ -43,14 +43,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.music_note,
-                                color: Colors.white),
+                            icon: const Icon(Icons.music_note, color: Colors.white),
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SoundSelectionScreen(),
+                                  builder: (context) => const SoundSelectionScreen(),
                                 ),
                               );
                             },
@@ -84,8 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       String quote = snapshot.data!['quote']!;
                       String author = snapshot.data!['author']!;
                       return Container(
-                        padding: const EdgeInsets.only(
-                            top: 15, left: 15.0, right: 15),
+                        padding: const EdgeInsets.only(top: 15, left: 15.0, right: 15),
                         decoration: BoxDecoration(
                           color: Colors.white24,
                           borderRadius: BorderRadius.circular(12),
@@ -114,8 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   IconButton(
-                                    icon: Icon(Icons.ios_share,
-                                        color: Colors.white),
+                                    icon: Icon(Icons.ios_share, color: Colors.white),
                                     onPressed: () {
                                       Share.share('$quote - $author');
                                     },
@@ -152,74 +148,51 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: FutureBuilder<List<MeditationSession>>(
                         future: MeditationSessionManager().getDiverseSessions(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
                           } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}',
-                                style: const TextStyle(
-                                    color:
-                                        Colors.white)); // Error text in white
+                            return Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.white));
                           } else if (snapshot.hasData) {
                             final sessions = snapshot.data!;
-                            // If you always want exactly 4 sessions:
-                            sessions.sort((a, b) => a.duration.compareTo(
-                                b.duration)); // Sort sessions by duration
-                            List<MeditationSession> uniqueSessions = sessions
-                                .take(4)
-                                .toList(); // Take only the first 4 sessions
+                            sessions.sort((a, b) => a.duration.compareTo(b.duration));
+                            List<MeditationSession> uniqueSessions = sessions.take(4).toList();
 
                             return GridView.builder(
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 15.0,
                                 mainAxisSpacing: 15.0,
-                                childAspectRatio:
-                                    (2 / 1), // Aspect ratio for square items
+                                childAspectRatio: (2 / 1),
                               ),
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: uniqueSessions.length,
                               itemBuilder: (context, index) {
                                 final session = uniqueSessions[index];
-                                final Widget destinationScreen = session
-                                        .isBreathingExercise
+                                final Widget destinationScreen = session.isBreathingExercise
                                     ? const BreathingScreen()
-                                    : const MeditationScreen(); // Destination screen based on session type
+                                    : const MeditationScreen();
                                 return Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white30,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: ListTile(
-                                    title: Text('${session.duration} min',
-                                        style: const TextStyle(
-                                            color: Colors.white)),
+                                    title: Text('${session.duration} min', style: const TextStyle(color: Colors.white)),
                                     subtitle: Text(
-                                        session.isBreathingExercise
-                                            ? 'Breathing Exercise'
-                                            : 'Simple Meditation',
-                                        style: const TextStyle(
-                                            color: Colors.white)),
+                                      session.isBreathingExercise ? 'Breathing Exercise' : 'Simple Meditation',
+                                      style: const TextStyle(color: Colors.white),
+                                    ),
                                     leading: Icon(
-                                      session.isBreathingExercise
-                                          ? Icons.air
-                                          : Icons.self_improvement,
+                                      session.isBreathingExercise ? Icons.air : Icons.self_improvement,
                                       color: Colors.white,
                                     ),
                                     onTap: () {
-                                      // Set the selected session duration in a provider before navigating
-                                      Provider.of<MeditationTimeProvider>(
-                                              context,
-                                              listen: false)
-                                          .selectedMinute = session.duration;
+                                      Provider.of<MeditationTimeProvider>(context, listen: false).selectedMinute = session.duration;
+                                      print(Provider.of<MeditationTimeProvider>(context, listen: false).selectedMinute);
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                destinationScreen),
+                                        MaterialPageRoute(builder: (context) => destinationScreen),
                                       );
                                     },
                                   ),
@@ -227,9 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                             );
                           } else {
-                            return const Text('No recent sessions found',
-                                style: TextStyle(
-                                    color: Colors.white)); // Text in white
+                            return const Text('No recent sessions found', style: TextStyle(color: Colors.white));
                           }
                         },
                       ),
@@ -244,3 +215,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
