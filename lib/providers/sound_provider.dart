@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:meditation_app_flutter/common_definitions.dart';
 
 class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
   int _currentSoundIndex = 0;
@@ -81,7 +82,7 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
     _soundUrls = await Future.wait(snapshot.docs.map((doc) async {
       final soundUrl = doc['url'] as String;
       if (soundUrl.startsWith('gs://')) {
-        return await _convertGsUrlToHttp(soundUrl);
+        return await convertGsUrlToHttp(soundUrl);
       }
       return soundUrl;
     }).toList());
@@ -89,7 +90,7 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
     _imageUrls = await Future.wait(snapshot.docs.map((doc) async {
       final imageUrl = doc['imageUrl'] as String;
       if (imageUrl.startsWith('gs://')) {
-        return await _convertGsUrlToHttp(imageUrl);
+        return await convertGsUrlToHttp(imageUrl);
       }
       return imageUrl;
     }).toList());
@@ -98,15 +99,6 @@ class BackgroundSoundProvider with ChangeNotifier, WidgetsBindingObserver {
     print('Sound data fetched successfully.');
   }
 
-  Future<String> _convertGsUrlToHttp(String gsUrl) async {
-    final ref = FirebaseStorage.instance.refFromURL(gsUrl);
-    return await ref.getDownloadURL();
-  }
-
-  Future<String> getDownloadURL(String gsUrl) async {
-    final ref = FirebaseStorage.instance.refFromURL(gsUrl);
-    return await ref.getDownloadURL();
-  }
 
   Future<void> _filterAndConvertSoundData() async {
     _soundNames = _soundData.map((data) => data['name'] as String).toList();

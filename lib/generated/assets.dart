@@ -6,14 +6,13 @@ class Assets {
   static const String assetsIconsPause = 'assets/icons/pause.png';
   static const String assetsIconsPlay = 'assets/icons/play.png';
   static const String assetsQuotes = 'assets/quotes.json';
+  static const String breathingSegmentedCirclePainter = 'lib/meditation/breathing/SegmentedCirclePainter.dart';
   static const String gongsBong = 'assets/gongs/bong.mp3';
   static const String gongsBongo = 'assets/gongs/bongo.mp3';
   static const String gongsDing = 'assets/gongs/ding.mp3';
   static const String gongsIn = 'assets/gongs/in.mp3';
   static const String gongsOut = 'assets/gongs/out.mp3';
   static const String gongsZenGong2 = 'assets/gongs/zen_gong2.mp3';
-  static const String gongsZenGong3 = 'assets/gongs/zen_gong3.mp3';
-  static const String gongsZenGong4 = 'assets/gongs/zen_gong4.mp3';
   static const String iconsCross = 'assets/icons/cross.png';
   static const String iconsPause = 'assets/icons/pause.png';
   static const String iconsPlay = 'assets/icons/play.png';

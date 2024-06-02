@@ -17,10 +17,6 @@ class SoundSelectionScreen extends StatelessWidget {
       final soundProvider =
           Provider.of<BackgroundSoundProvider>(context, listen: false);
 
-      print(
-          'isRestrictedSoundPlayed: ${soundProvider.isRestrictedSoundPlayed}');
-      print('isAuthenticated: ${soundProvider.isAuthenticated}');
-
       if (soundProvider.isRestrictedSoundPlayed &&
           !soundProvider.isAuthenticated) {
         final result = await showDialog(

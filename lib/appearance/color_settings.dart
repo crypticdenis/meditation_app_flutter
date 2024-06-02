@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:meditation_app_flutter/appearance/gradient_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:meditation_app_flutter/providers/theme_provider.dart';
 import 'package:meditation_app_flutter/custom_time_wheel.dart';
@@ -25,12 +24,12 @@ class SettingsScreen extends StatelessWidget {
         ),
         child: Center(
           child: CustomTimeWheel(
-            itemCount: GradientColors.gradients.length,
+            itemCount: themeProvider.gradientData.length,
             itemExtent: 80,
             selectedValue: themeProvider.currentThemeIndex,
             onSelectedItemChanged: (index) => themeProvider.setTheme(index),
             mode: WheelMode.colors,
-            colorNames: GradientColors.names,
+            colorNames: themeProvider.gradientData.map<String>((data) => data['name'] as String).toList(),
           ),
         ),
       ),

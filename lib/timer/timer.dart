@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../common_definitions.dart';
 import 'package:audioplayers/audioplayers.dart';
-import '../gong/gongs.dart';
 import '../providers/gong_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/streak_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:meditation_app_flutter/home/main_home.dart';
+
 
 class TimerWidget extends StatefulWidget {
   final int minute;
@@ -41,22 +41,22 @@ class _TimerWidgetState extends State<TimerWidget> {
     super.initState();
     _totalSeconds = widget.minute * 60 + widget.second;
     _remainingSeconds = _totalSeconds;
-    _handleOperation(widget.operation);
+    _handleOperation(widget.operation, context);
   }
 
   @override
   void didUpdateWidget(TimerWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.operation != oldWidget.operation) {
-      _handleOperation(widget.operation);
+      _handleOperation(widget.operation, context);
     }
   }
 
-  void _handleOperation(TimerOperation operation) {
+  void _handleOperation(TimerOperation operation, BuildContext context) {
     switch (operation) {
       case TimerOperation.start:
       case TimerOperation.resume:
-        _startTimers();
+        _startTimers(context);
         break;
       case TimerOperation.pause:
         _pauseTimers();
@@ -67,17 +67,8 @@ class _TimerWidgetState extends State<TimerWidget> {
     }
   }
 
-  void _resetTimers() {
-    _digitTimer?.cancel();
-    _progressTimer?.cancel();
-    setState(() {
-      _remainingSeconds = widget.minute * 60 + widget.second;
-      _elapsedTenths = 0;
-    });
-  }
-
-  void _startTimers() {
-    _playGongSound();
+  void _startTimers(BuildContext context) {
+    _playGongSound(context);
     _digitTimer?.cancel();
     _progressTimer?.cancel();
 
@@ -89,8 +80,8 @@ class _TimerWidgetState extends State<TimerWidget> {
       } else {
         _digitTimer?.cancel();
         _progressTimer?.cancel();
-        _handleTimerComplete();
-        _playGongSound();
+        _handleTimerComplete(context);
+        _playGongSound(context);
         if (widget.onTimerComplete != null) {
           widget.onTimerComplete!();
         }
@@ -104,13 +95,22 @@ class _TimerWidgetState extends State<TimerWidget> {
     });
   }
 
-  void _playGongSound() async {
+  void _playGongSound(BuildContext context) async {
     final gongProvider = Provider.of<GongProvider>(context, listen: false);
     if (gongProvider.gongEnabled) {
-      final String gongSoundPath = GongSounds.files[gongProvider.currentGongIndex];
+      final String gongSoundUrl = gongProvider.gongUrls[gongProvider.currentGongIndex];
       final player = AudioPlayer();
-      await player.play(AssetSource(gongSoundPath));
+      await player.play(UrlSource(gongSoundUrl));
     }
+  }
+
+  void _resetTimers() {
+    _digitTimer?.cancel();
+    _progressTimer?.cancel();
+    setState(() {
+      _remainingSeconds = widget.minute * 60 + widget.second;
+      _elapsedTenths = 0;
+    });
   }
 
   Future<DateTime> getLastIncrementDateFromStorage() async {
@@ -119,7 +119,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     return DateTime.fromMillisecondsSinceEpoch(lastIncrementTimestamp);
   }
 
-  void _handleTimerComplete() async {
+  void _handleTimerComplete(BuildContext context) async {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => Home()),

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:meditation_app_flutter/appearance/gradient_colors.dart';
-import 'gong/gongs.dart';
-import 'background_sounds/sounds.dart';
 
-enum WheelMode { numbers, colors, gongs, sounds }
+enum WheelMode { numbers, colors,}
 
 class CustomTimeWheel extends StatefulWidget {
   final int itemCount;
@@ -46,7 +43,7 @@ class _CustomTimeWheelState extends State<CustomTimeWheel> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients && widget.autoScrollToItem != null) {
         final fixedExtentScrollController =
-            _scrollController as FixedExtentScrollController;
+        _scrollController as FixedExtentScrollController;
 
         fixedExtentScrollController.animateToItem(
           widget.autoScrollToItem!,
@@ -74,7 +71,7 @@ class _CustomTimeWheelState extends State<CustomTimeWheel> {
             final double opacity = isSelected
                 ? 1.0
                 : (1 / (1 + (index - widget.selectedValue).abs() * 0.5))
-                    .clamp(0.1, 1.0);
+                .clamp(0.1, 1.0);
 
             Widget content;
             switch (widget.mode) {
@@ -92,31 +89,7 @@ class _CustomTimeWheelState extends State<CustomTimeWheel> {
                 break;
               case WheelMode.colors:
                 content = Text(
-                  GradientColors.names[index],
-                  style: TextStyle(
-                    fontSize: isSelected ? 24 : 20,
-                    color: isSelected
-                        ? Colors.white
-                        : Colors.white.withOpacity(opacity),
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-                break;
-              case WheelMode.gongs:
-                content = Text(
-                  GongSounds.names[index],
-                  style: TextStyle(
-                    fontSize: isSelected ? 24 : 20,
-                    color: isSelected
-                        ? Colors.white
-                        : Colors.white.withOpacity(opacity),
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-                break;
-              case WheelMode.sounds:
-                content = Text(
-                  BackgroundsSounds.names[index],
+                  widget.colorNames![index], // Use the passed colorNames
                   style: TextStyle(
                     fontSize: isSelected ? 24 : 20,
                     color: isSelected
