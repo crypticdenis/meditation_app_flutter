@@ -1,0 +1,2 @@
+C:\Users\Denis\StudioProjects\meditational_org\android\app\src\main\kotlin\com\example\meditation_app_flutter\MainActivity.kt
+C:\Users\Denis\StudioProjects\meditational_org\android\app\src\main\kotlin\com\example\meditational_org\MainActivity.kt
