@@ -11,6 +11,7 @@ import 'package:meditation_app_flutter/background_sounds/sound_settings.dart';
 import 'meditation_session_controller.dart';
 import 'dart:async';
 import 'package:meditation_app_flutter/providers/streak_provider.dart';
+import 'dart:ui';
 
 class MeditationScreen extends StatefulWidget {
   const MeditationScreen({super.key});
@@ -40,9 +41,43 @@ class _MeditationScreenState extends State<MeditationScreen> {
       onTimerComplete: () {
         print('Timer completed!');
         _handleTimerComplete();
+        _showCongratulatoryPopup();
       },
     );
     _resetInactivityTimer();
+  }
+
+  void _showCongratulatoryPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // Start a timer that will close the dialog after 5 seconds
+        Future.delayed(Duration(seconds: 5), () {
+          Navigator.of(context).pop();
+        });
+
+        return AlertDialog(
+          title: Center(
+            child: Text(
+              '🧘🏿‍♂️ Congratulations! 🧘‍♀️',
+              style: TextStyle(fontSize: 24), // Increased font size
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min, // Minimize the height of the column
+            children: [
+              Center(
+                child: Text(
+                  'Take a moment to appreciate the time you’ve dedicated to your well-being.',
+                  style: TextStyle(fontSize: 18), // Increased font size
+                  textAlign: TextAlign.center, // Center the content text
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void _resetInactivityTimer() {
@@ -83,7 +118,8 @@ class _MeditationScreenState extends State<MeditationScreen> {
     }
 
     // Debugging: Print the selected duration
-    print("MeditationScreen build - Selected duration: ${meditationTimeProvider.selectedMinute}");
+    print(
+        "MeditationScreen build - Selected duration: ${meditationTimeProvider.selectedMinute}");
 
     return GestureDetector(
       onTap: () {
@@ -104,16 +140,16 @@ class _MeditationScreenState extends State<MeditationScreen> {
                 alignment: Alignment.center,
                 child: _timerOperation == TimerOperation.reset
                     ? TimePicker(
-                  initialMinute: meditationTimeProvider.selectedMinute,
-                  onTimeSelected: timerLogic.handleTimeSelected,
-                )
+                        initialMinute: meditationTimeProvider.selectedMinute,
+                        onTimeSelected: timerLogic.handleTimeSelected,
+                      )
                     : TimerWidget(
-                  minute: meditationTimeProvider.selectedMinute,
-                  second: 0,
-                  operation: _timerOperation,
-                  onTimerComplete: () => timerLogic.resetTimer(),
-                  isTimerVisible: _isTimerVisible,
-                ),
+                        minute: meditationTimeProvider.selectedMinute,
+                        second: 0,
+                        operation: _timerOperation,
+                        onTimerComplete: () => timerLogic.resetTimer(),
+                        isTimerVisible: _isTimerVisible,
+                      ),
               ),
               Positioned(
                 bottom: 50,
@@ -138,7 +174,8 @@ class _MeditationScreenState extends State<MeditationScreen> {
                     }
                   },
                   child: Image.asset(
-                    _timerOperation == TimerOperation.pause || _timerOperation == TimerOperation.reset
+                    _timerOperation == TimerOperation.pause ||
+                            _timerOperation == TimerOperation.reset
                         ? 'assets/icons/play.png'
                         : 'assets/icons/pause.png',
                     width: 50,
@@ -157,12 +194,14 @@ class _MeditationScreenState extends State<MeditationScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.music_note, color: Colors.white),
+                          icon:
+                              const Icon(Icons.music_note, color: Colors.white),
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const SoundSelectionScreen(),
+                                builder: (context) =>
+                                    const SoundSelectionScreen(),
                               ),
                             );
                           },
@@ -185,8 +224,8 @@ class _MeditationScreenState extends State<MeditationScreen> {
                       onPressed: () {
                         showQuitSessionDialog(
                           context,
-                              () {},
-                              () {
+                          () {},
+                          () {
                             timerLogic.cancelTimer();
                             Navigator.of(context).pop();
                           },
@@ -203,4 +242,3 @@ class _MeditationScreenState extends State<MeditationScreen> {
     );
   }
 }
-
