@@ -26,10 +26,8 @@ class _HomeState extends State<Home> {
   late Future<void> _initFuture;
   late StreakProvider _streakProvider;
   late RatingsProvider _ratingsProvider;
-  late ThemeProvider _themeProvider;
   late BackgroundSoundProvider _backgroundSoundProvider;
   late GongProvider _gongProvider;
-  late SettingsProvider _settingsProvider;
   late BreathingSettingsProvider _breathprovider;
   User? _user;
 
@@ -38,10 +36,8 @@ class _HomeState extends State<Home> {
     super.initState();
     _breathprovider = Provider.of<BreathingSettingsProvider>(context, listen: false);
     _initFuture = _breathprovider.init();
-    _themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     _ratingsProvider = Provider.of<RatingsProvider>(context, listen: false);
     _initFuture = _ratingsProvider.init();
-    _settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
     _streakProvider = Provider.of<StreakProvider>(context, listen: false);
     _initFuture = _streakProvider.init();
     _backgroundSoundProvider =

@@ -6,8 +6,15 @@ import 'dart:convert';
 class ThemeProvider with ChangeNotifier {
   int _currentThemeIndex = 0;
   SharedPreferences? _prefs;
-  List<Map<String, dynamic>> _gradientData = [];
-  List<LinearGradient> _gradients = [];
+  List<Map<String, dynamic>> _gradientData = [
+    {
+      'name': 'Default Gradient',
+      'colors': [Colors.blue, Colors.blueAccent]
+    }
+  ];
+  List<LinearGradient> _gradients = [
+    LinearGradient(colors: [Colors.blue, Colors.blueAccent])
+  ];
 
   ThemeProvider() {
     _loadThemeIndex();
@@ -25,7 +32,7 @@ class ThemeProvider with ChangeNotifier {
   Future<void> _fetchGradientData() async {
     try {
       final ref =
-          FirebaseStorage.instance.ref().child('gradients/gradients.csv');
+      FirebaseStorage.instance.ref().child('gradients/gradients.csv');
       final data = await ref.getData();
       final csvString = utf8.decode(data!);
       _parseCSVData(csvString);
