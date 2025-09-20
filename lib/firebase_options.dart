@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -33,10 +30,7 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -51,7 +45,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyArYkJDXLe559FpwXl0HoL-7sUFwSN1Vc4',
-    appId: '1:268853907281:android:51508d9d003b6d93a9cd70',
+    appId: '1:268853907281:android:4a97a54b4b590491a9cd70',
     messagingSenderId: '268853907281',
     projectId: 'meditation-6f139',
     databaseURL: 'https://meditation-6f139-default-rtdb.europe-west1.firebasedatabase.app',
@@ -69,4 +63,27 @@ class DefaultFirebaseOptions {
     iosClientId: '268853907281-17g5sph3i025ksc3m3nji7pvcl4i5k7j.apps.googleusercontent.com',
     iosBundleId: 'com.example.meditationAppFlutter',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyB2d4FcVb9S7Sh3sxCzbDrMFvaBSoDCc6w',
+    appId: '1:268853907281:web:f837c0c04f069e15a9cd70',
+    messagingSenderId: '268853907281',
+    projectId: 'meditation-6f139',
+    authDomain: 'meditation-6f139.firebaseapp.com',
+    databaseURL: 'https://meditation-6f139-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'meditation-6f139.appspot.com',
+    measurementId: 'G-PXK7DBWMME',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyB2d4FcVb9S7Sh3sxCzbDrMFvaBSoDCc6w',
+    appId: '1:268853907281:web:f837c0c04f069e15a9cd70',
+    messagingSenderId: '268853907281',
+    projectId: 'meditation-6f139',
+    authDomain: 'meditation-6f139.firebaseapp.com',
+    databaseURL: 'https://meditation-6f139-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'meditation-6f139.appspot.com',
+    measurementId: 'G-PXK7DBWMME',
+  );
+
 }
